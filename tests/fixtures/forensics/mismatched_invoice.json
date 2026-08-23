@@ -1,0 +1,25 @@
+{
+  "extraction": {
+    "document_type": "invoice",
+    "title": "Mismatched ACME Invoice",
+    "entities": ["ACME Corp", "PaperTrail AI"],
+    "dates": ["2026-08-15"],
+    "amounts": ["1500.00"],
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Cloud Audit Services",
+        "quantity": "2",
+        "unit_price": "660.25",
+        "amount": "1500.00"
+      }
+    ],
+    "vendor": "ACME Corp",
+    "customer": "PaperTrail AI",
+    "invoice_number": "INV-2026-002",
+    "description": "Mismatched arithmetic invoice",
+    "extraction_confidence": 0.90
+  },
+  "status": "SUCCESS",
+  "status_reason": "Extraction completed successfully."
+}

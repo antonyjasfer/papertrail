@@ -1,0 +1,20 @@
+{
+  "document_type": "invoice",
+  "vendor_name": "Acme Industrial Supplies Ltd",
+  "invoice_number": "INV-2026-9041",
+  "invoice_date": "2026-03-01",
+  "due_date": "2026-03-31",
+  "total_amount": 45000.0,
+  "currency": "USD",
+  "tax_amount": 3600.0,
+  "line_items": [
+    {
+      "description": "Heavy Machinery Spare Parts - Turbine Assembly",
+      "quantity": 2,
+      "unit_price": 20700.0,
+      "total": 41400.0
+    }
+  ],
+  "extraction_confidence": 0.98,
+  "raw_text_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

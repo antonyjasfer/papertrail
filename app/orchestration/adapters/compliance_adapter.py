@@ -1,0 +1,92 @@
+import logging
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
+from app.compliance.engine import ComplianceEngine
+from app.models.analysis import AnalysisStatus, DocumentExtractionResult, GeminiExtractionPayload
+from app.models.compliance import ComplianceContext
+from app.models.document import DocumentMetadata
+from app.orchestration.adapters.base import (
+    AdapterResult,
+    BaseEngineAdapter,
+    FailureClassification,
+)
+
+logger = logging.getLogger(__name__)
+
+
+class ComplianceAdapter(BaseEngineAdapter):
+    """Adapter wrapping Phase 9 Deterministic Compliance Engine."""
+
+    def __init__(self, engine: Optional[ComplianceEngine] = None) -> None:
+        self.engine = engine or ComplianceEngine()
+
+    @property
+    def adapter_name(self) -> str:
+        return "ComplianceAdapter (Phase 9)"
+
+    def execute(
+        self,
+        workflow_id: str,
+        document_id: str,
+        payload: Dict[str, Any],
+    ) -> AdapterResult:
+        logger.info(
+            f"[{self.adapter_name}] Executing compliance evaluation for workflow '{workflow_id}' / doc '{document_id}'"
+        )
+        try:
+            ref_dt = datetime(2026, 8, 18, 12, 0, 0, tzinfo=timezone.utc)
+            comp_context = ComplianceContext(reference_datetime=ref_dt)
+            extraction_payload = GeminiExtractionPayload(
+                document_type="invoice",
+                vendor_name="Standard Vendor",
+                invoice_number="INV-1001",
+                dates=["2026-01-15"],
+                amounts=["1000.00"],
+                extraction_confidence=0.95,
+            )
+            extraction_result = DocumentExtractionResult(
+                extraction=extraction_payload,
+                status=AnalysisStatus.SUCCESS,
+                status_reason="Extraction ready for compliance",
+            )
+            doc_metadata = DocumentMetadata(
+                document_id=document_id,
+                filename="document.pdf",
+                content_type="application/pdf",
+                size_bytes=1024,
+                storage_bucket="papertrail-ai-documents-dev",
+                storage_object=f"documents/{document_id}.pdf",
+                checksum="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            )
+
+            result = self.engine.evaluate(
+                extraction_result=extraction_result,
+                metadata=doc_metadata,
+                forensic_result=None,
+                context=comp_context,
+            )
+
+            has_failed_findings = any(f.status.value == "FAIL" for f in result.findings)
+
+            if has_failed_findings:
+                return AdapterResult(
+                    success=False,
+                    failure_classification=FailureClassification.REQUIRES_REVIEW,
+                    failure_reason=f"Compliance evaluation contained failed findings: {result.evidence_summary}",
+                    output_reference={"compliance_result": result.model_dump(mode="json")},
+                    observations={"finding_count": result.finding_count},
+                )
+
+            return AdapterResult(
+                success=True,
+                output_reference={"compliance_result": result.model_dump(mode="json")},
+                observations={"finding_count": result.finding_count, "summary": result.evidence_summary},
+            )
+        except Exception as e:
+            logger.error(f"[{self.adapter_name}] Unexpected error: {e}", exc_info=True)
+            return AdapterResult(
+                success=False,
+                failure_classification=FailureClassification.RETRYABLE,
+                failure_reason=f"ComplianceAdapter exception: {e}",
+            )

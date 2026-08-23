@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+credentials.json
+service-account-key.json
+
+# Pytest & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.hypothesis/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS & Temp
+.DS_Store
+Thumbs.db
+*.log
+tmp/
+temp/
+reports/
+generated_pdfs/

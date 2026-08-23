@@ -1,0 +1,25 @@
+{
+  "extraction": {
+    "document_type": "invoice",
+    "title": "Clean ACME Invoice",
+    "entities": ["ACME Corp", "PaperTrail AI"],
+    "dates": ["2026-08-15"],
+    "amounts": ["1320.50"],
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Cloud Audit Services",
+        "quantity": "2",
+        "unit_price": "660.25",
+        "amount": "1320.50"
+      }
+    ],
+    "vendor": "ACME Corp",
+    "customer": "PaperTrail AI",
+    "invoice_number": "INV-2026-001",
+    "description": "Clean audit services invoice",
+    "extraction_confidence": 0.95
+  },
+  "status": "SUCCESS",
+  "status_reason": "Extraction completed successfully."
+}

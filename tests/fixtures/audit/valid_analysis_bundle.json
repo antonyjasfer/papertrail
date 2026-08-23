@@ -1,0 +1,22 @@
+{
+  "bundle_id": "bundle-doc-fixture-001-wf-fixture-001",
+  "document_id": "doc-fixture-001",
+  "workflow_id": "wf-fixture-001",
+  "document_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "extraction_payload_hash": "91848a53dd8b4ce77fc32023177d80aa7dd64a7b8d4a38f52b5c5be206f8b5c6",
+  "forensic_result_hash": "0fb08cee59a85a6ec872aee8ed2b873520b85174454648a39dbe04319c8e6fed",
+  "compliance_result_hash": "5b64d303d32476574b04459f7f9b70e3a7e5dad467ed2ea174c1e8d7b2ec6939",
+  "risk_assessment_hash": "4182c971189ea577b68814c42a324abf2f3141c8f3c6aa62dcbd2c7a4e563bf6",
+  "policy_ids": [
+    "POL-FIN-001"
+  ],
+  "policy_versions": [
+    "1.0.0"
+  ],
+  "risk_profile_id": "RP-FIN-001",
+  "risk_profile_version": "1.0.0",
+  "app_version": "0.1.0",
+  "version_status": "DECLARED",
+  "sealed_at": "2026-08-18T12:00:00Z",
+  "bundle_hash": "8123daff81144d63b3ab16c012dd5f9b8befda417423208c6369bb42b4591451"
+}
