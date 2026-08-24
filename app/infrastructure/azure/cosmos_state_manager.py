@@ -185,7 +185,7 @@ class CosmosStateManager:
                 idemp_item = self.container.read_item(item=idemp_id, partition_key=workflow_id)
             except Exception:
                 idemp_item = None
-        else:
+        if not idemp_item:
             idemp_item = self._items.get(f"{workflow_id}:{idemp_id}")
 
         if event.workflow_revision < current_revision:
