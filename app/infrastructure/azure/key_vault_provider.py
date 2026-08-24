@@ -27,7 +27,16 @@ class AzureKeyVaultSecretProvider:
     @property
     def client(self) -> Optional[Any]:
         if self._client is None:
-            self._client = azure_foundation.get_keyvault_secret_client()
+            if self.vault_url:
+                try:
+                    from azure.keyvault.secrets import SecretClient
+                    cred = azure_foundation.get_credential()
+                    if cred:
+                        self._client = SecretClient(vault_url=self.vault_url, credential=cred)
+                except Exception as err:
+                    logger.warning("SecretClient initialization error (%s).", err)
+            if self._client is None:
+                self._client = azure_foundation.get_keyvault_secret_client()
         return self._client
 
     def set_in_memory_secret(self, secret_name: str, value: str) -> None:

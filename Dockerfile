@@ -12,7 +12,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY requirements.txt requirements-azure.txt ./
 
-RUN pip install --no-cache-dir --user -r requirements.txt -r requirements-azure.txt
+RUN pip install --no-cache-dir --user -r requirements.txt -r requirements-azure.txt && \
+    find /root/.local -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true && \
+    find /root/.local -type f -name '*.pyc' -delete 2>/dev/null || true && \
+    find /root/.local -type f -name '*.pyo' -delete 2>/dev/null || true && \
+    rm -rf /root/.cache
 
 # ==============================================================================
 # Stage 2: Production Lean Runtime

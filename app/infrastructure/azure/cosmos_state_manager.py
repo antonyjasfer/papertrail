@@ -190,7 +190,8 @@ class CosmosStateManager:
 
         if event.workflow_revision < current_revision:
             if idemp_item:
-                if idemp_item.get("payload_hash") != event.payload_hash:
+                stored_hash = idemp_item.get("payload_hash")
+                if stored_hash and stored_hash != event.payload_hash:
                     raise IntegrityConflictError(
                         f"Integrity conflict for event key '{logical_key}': payload hash mismatch."
                     )
@@ -201,7 +202,8 @@ class CosmosStateManager:
             raise FutureEventError(workflow_id, event.workflow_revision, current_revision)
 
         if idemp_item:
-            if idemp_item.get("payload_hash") != event.payload_hash:
+            stored_hash = idemp_item.get("payload_hash")
+            if stored_hash and stored_hash != event.payload_hash:
                 raise IntegrityConflictError(
                     f"Integrity conflict for event key '{logical_key}': payload hash mismatch."
                 )
