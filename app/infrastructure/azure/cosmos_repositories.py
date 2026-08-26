@@ -43,10 +43,11 @@ class CosmosWorkflowRepository:
     
     Implements IWorkflowRepository.
     """
+    _shared_items: Dict[str, Dict[str, Any]] = {}
 
     def __init__(self, container_client: Optional[Any] = None) -> None:
         self._container = container_client
-        self._items: Dict[str, Dict[str, Any]] = {}
+        self._items: Dict[str, Dict[str, Any]] = self._shared_items
 
     @property
     def container(self) -> Optional[Any]:
@@ -139,10 +140,11 @@ class CosmosDocumentRepository:
     
     Implements IDocumentRepository.
     """
+    _shared_items: Dict[str, Dict[str, Any]] = {}
 
     def __init__(self, container_client: Optional[Any] = None) -> None:
         self._container = container_client
-        self._items: Dict[str, Dict[str, Any]] = {}
+        self._items: Dict[str, Dict[str, Any]] = self._shared_items
 
     @property
     def container(self) -> Optional[Any]:
@@ -229,10 +231,11 @@ class CosmosAuditEventRepository:
     
     Implements IAuditEventRepository.
     """
+    _shared_items: Dict[str, Dict[str, Any]] = {}
 
     def __init__(self, container_client: Optional[Any] = None) -> None:
         self._container = container_client
-        self._items: Dict[str, Dict[str, Any]] = {}
+        self._items: Dict[str, Dict[str, Any]] = self._shared_items
 
     @property
     def container(self) -> Optional[Any]:

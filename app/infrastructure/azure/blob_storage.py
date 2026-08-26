@@ -14,10 +14,11 @@ class AzureBlobStorageProvider:
     Handles binary document and report artifact storage in Azure Blob Storage
     with SHA-256 integrity checks and local fallback support.
     """
+    _shared_in_memory_blobs: Dict[str, bytes] = {}
 
     def __init__(self, blob_service_client: Optional[Any] = None) -> None:
         self._blob_service_client = blob_service_client
-        self._in_memory_blobs: Dict[str, bytes] = {}  # (container/object_path) -> bytes
+        self._in_memory_blobs: Dict[str, bytes] = self._shared_in_memory_blobs
 
     @property
     def client(self) -> Optional[Any]:

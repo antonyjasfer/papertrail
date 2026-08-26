@@ -35,17 +35,15 @@ class CosmosStateManager:
     are co-located in the 'workflow_state' container under partition key '/workflow_id'.
     """
 
-    def __init__(
-        self,
-        container_client: Optional[Any] = None,
-        clock: Optional[IClock] = None,
-    ) -> None:
-        self._container = container_client
+    _shared_items: Dict[str, Dict[str, Any]] = {}
+
+    def __init__(self, clock: Optional[IClock] = None) -> None:
         self.clock = clock or ProductionClock()
+        self._container: Optional[Any] = None
         self.database_name = settings.azure_cosmos_database
         self.container_name = settings.azure_cosmos_container_workflow_state
         # In-memory storage structures for local testing when Cosmos client is not provided
-        self._items: Dict[str, Dict[str, Any]] = {}  # (workflow_id, item_id) -> item dict
+        self._items: Dict[str, Dict[str, Any]] = self._shared_items
 
     @property
     def container(self) -> Optional[Any]:
@@ -140,10 +138,17 @@ class CosmosStateManager:
 
         if self.container is not None:
             try:
-                batch = self.container.create_transactional_batch(partition_key=workflow_id)
-                batch.create_item(wf_item)
-                batch.create_item(outbox_item)
-                self.container.execute_transactional_batch(batch)
+                if hasattr(self.container, "execute_item_batch"):
+                    batch = [("create", (wf_item,)), ("create", (outbox_item,))]
+                    self.container.execute_item_batch(batch, partition_key=workflow_id)
+                elif hasattr(self.container, "create_transactional_batch"):
+                    batch = self.container.create_transactional_batch(partition_key=workflow_id)
+                    batch.create_item(wf_item)
+                    batch.create_item(outbox_item)
+                    self.container.execute_transactional_batch(batch)
+                else:
+                    self.container.upsert_item(wf_item)
+                    self.container.upsert_item(outbox_item)
             except Exception as err:
                 logger.error("Cosmos transactional batch create_workflow failed: %s", err)
                 raise
@@ -377,15 +382,33 @@ class CosmosStateManager:
         # Step 4: Execute TransactionalBatch if Cosmos container is active
         if self.container is not None:
             try:
-                batch = self.container.create_transactional_batch(partition_key=workflow_id)
-                batch.upsert_item(wf_item)
-                if claim_item:
-                    batch.upsert_item(claim_item)
-                if idemp_item:
-                    batch.upsert_item(idemp_item)
-                if outbox_item:
-                    batch.create_item(outbox_item)
-                self.container.execute_transactional_batch(batch)
+                if hasattr(self.container, "execute_item_batch"):
+                    batch = [("upsert", (wf_item,))]
+                    if claim_item:
+                        batch.append(("upsert", (claim_item,)))
+                    if idemp_item:
+                        batch.append(("upsert", (idemp_item,)))
+                    if outbox_item:
+                        batch.append(("create", (outbox_item,)))
+                    self.container.execute_item_batch(batch, partition_key=workflow_id)
+                elif hasattr(self.container, "create_transactional_batch"):
+                    batch = self.container.create_transactional_batch(partition_key=workflow_id)
+                    batch.upsert_item(wf_item)
+                    if claim_item:
+                        batch.upsert_item(claim_item)
+                    if idemp_item:
+                        batch.upsert_item(idemp_item)
+                    if outbox_item:
+                        batch.create_item(outbox_item)
+                    self.container.execute_transactional_batch(batch)
+                else:
+                    self.container.upsert_item(wf_item)
+                    if claim_item:
+                        self.container.upsert_item(claim_item)
+                    if idemp_item:
+                        self.container.upsert_item(idemp_item)
+                    if outbox_item:
+                        self.container.upsert_item(outbox_item)
             except Exception as err:
                 logger.error("Cosmos TransactionalBatch commit failed: %s", err)
                 raise StateSynchronizationError(workflow_id, expected_revision, stored_revision) from err
