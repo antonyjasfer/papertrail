@@ -15,58 +15,52 @@ from tests.unit.test_workflow_repository import MockFirestoreClient
 from app.database.repositories.document_repository import DocumentRepository
 
 
-class MockGCSBlob:
-    def __init__(self, name: str, bucket: Any = None):
-        self.name = name
-        self.bucket = bucket
-        self.payload = None
+class MockStorageAdapter:
+    """Mock storage adapter conforming to IStorageProvider for unit testing."""
 
-    def upload_from_string(self, file_bytes: bytes, content_type: str = None):
-        if getattr(self.bucket, "should_fail_upload", False):
-            raise Exception("GCS network timeout")
-        self.payload = file_bytes
-
-    def download_as_bytes(self) -> bytes:
-        if getattr(self.bucket, "should_fail_download", False):
-            raise Exception("GCS object unreadable")
-        return self.payload or b""
-
-    def exists(self) -> bool:
-        return self.payload is not None
-
-    def delete(self):
-        self.payload = None
-
-
-class MockGCSBucket:
-    def __init__(self, name: str):
-        self.name = name
-        self.blobs = {}
+    def __init__(self):
+        self.blobs: Dict[str, bytes] = {}
         self.should_fail_upload = False
         self.should_fail_download = False
 
-    def blob(self, object_path: str):
-        if object_path not in self.blobs:
-            self.blobs[object_path] = MockGCSBlob(object_path, bucket=self)
-        return self.blobs[object_path]
+    def upload_bytes(
+        self, bucket_or_container: str, object_path: str, data: bytes, content_type: str
+    ) -> None:
+        if self.should_fail_upload:
+            raise RuntimeError("Storage upload network timeout")
+        self.blobs[f"{bucket_or_container}/{object_path}"] = data
 
+    def download_bytes(self, bucket_or_container: str, object_path: str) -> bytes:
+        if self.should_fail_download:
+            raise RuntimeError("Storage download unreadable")
+        key = f"{bucket_or_container}/{object_path}"
+        if key not in self.blobs:
+            raise FileNotFoundError(f"Blob not found: {key}")
+        return self.blobs[key]
 
-class MockGCSClient:
-    def __init__(self):
-        self.buckets = {}
+    def delete_object(self, bucket_or_container: str, object_path: str) -> bool:
+        key = f"{bucket_or_container}/{object_path}"
+        return self.blobs.pop(key, None) is not None
 
-    def bucket(self, name: str):
-        if name not in self.buckets:
-            self.buckets[name] = MockGCSBucket(name)
-        return self.buckets[name]
+    def object_exists(self, bucket_or_container: str, object_path: str) -> bool:
+        key = f"{bucket_or_container}/{object_path}"
+        return key in self.blobs
 
 
 @pytest.fixture
-def mock_storage_service():
+def mock_storage_provider():
+    return MockStorageAdapter()
+
+
+@pytest.fixture
+def mock_storage_service(mock_storage_provider):
     mock_firestore = MockFirestoreClient()
     repo = DocumentRepository(client=mock_firestore)
-    mock_gcs = MockGCSClient()
-    return DocumentStorageService(repository=repo, storage_client=mock_gcs)
+    return DocumentStorageService(
+        repository=repo,
+        storage_provider=mock_storage_provider,
+        bucket_name="papertrail-ai-documents-dev",
+    )
 
 
 def test_filename_sanitization_and_path_traversal_protection():
@@ -133,25 +127,25 @@ def test_successful_storage_flow(mock_storage_service):
     assert fetched_meta.checksum == meta.checksum
 
 
-def test_storage_upload_failure(mock_storage_service):
-    """Test 15: Verify Cloud Storage upload failure updates status and raises DocumentStorageError."""
-    bucket = mock_storage_service.storage_client.bucket(mock_storage_service.bucket_name)
-    bucket.should_fail_upload = True  # Trigger simulated upload error
+def test_storage_upload_failure(mock_storage_service, mock_storage_provider):
+    """Test 15: Verify Storage upload failure updates status and raises DocumentStorageError."""
+    mock_storage_provider.should_fail_upload = True  # Trigger simulated upload error
 
     with pytest.raises(DocumentStorageError) as exc_info:
         mock_storage_service.store_document("test.pdf", "application/pdf", b"test bytes")
     assert "upload_bytes" in str(exc_info.value)
 
 
-def test_firestore_metadata_failure_and_gcs_cleanup(mock_storage_service):
-    """Tests 16 & 17: Verify Firestore metadata failure cleans up uploaded GCS object."""
-    # Mock repository create to simulate Firestore failure
+def test_firestore_metadata_failure_and_storage_cleanup(mock_storage_service, mock_storage_provider):
+    """Tests 16 & 17: Verify metadata failure cleans up uploaded storage object."""
     mock_storage_service.repository.create = MagicMock(side_effect=Exception("Firestore write error"))
 
     with pytest.raises(DocumentStorageError) as exc_info:
         mock_storage_service.store_document("fail_meta.pdf", "application/pdf", b"sample content")
 
     assert "persist_metadata" in str(exc_info.value)
+    # Ensure orphaned storage object was cleaned up
+    assert len(mock_storage_provider.blobs) == 0
 
 
 def test_document_retrieval_and_checksum_verification(mock_storage_service):
@@ -164,7 +158,7 @@ def test_document_retrieval_and_checksum_verification(mock_storage_service):
 
 
 def test_controlled_deletion(mock_storage_service):
-    """Test 19: Verify controlled deletion deletes GCS object and updates metadata to DELETED."""
+    """Test 19: Verify controlled deletion deletes storage object and updates metadata to DELETED."""
     content = b"To be deleted"
     meta = mock_storage_service.store_document("delete_me.pdf", "application/pdf", content)
 

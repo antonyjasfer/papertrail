@@ -4,9 +4,10 @@ import os
 import re
 import uuid
 from typing import Any, Optional, Set
+
 from app.core.config import settings
-from app.core.gcp import gcp_foundation
-from app.database.repositories.document_repository import DocumentRepository
+from app.core.contracts.repositories import IDocumentRepository
+from app.core.contracts.storage import IStorageProvider
 from app.models.document import DocumentMetadata, DocumentStatus
 
 logger = logging.getLogger("papertrail.services.document_storage")
@@ -67,35 +68,28 @@ def calculate_checksum(file_bytes: bytes) -> str:
 
 
 def generate_object_path(document_id: str, sanitized_filename: str) -> str:
-    """Generate deterministic Cloud Storage object path."""
+    """Generate deterministic Storage object path."""
     return f"documents/{document_id}/original/{sanitized_filename}"
 
 
 class DocumentStorageService:
-    """Service managing document validation, SHA-256 fingerprinting, Cloud Storage artifact upload,
-    and Firestore metadata persistence.
+    """Service managing document validation, SHA-256 fingerprinting, binary artifact upload,
+    and metadata persistence via injected IStorageProvider and IDocumentRepository.
     """
 
     def __init__(
         self,
-        repository: Optional[DocumentRepository] = None,
-        storage_client: Optional[Any] = None,
+        repository: Optional[IDocumentRepository] = None,
+        storage_provider: Optional[IStorageProvider] = None,
+        bucket_name: Optional[str] = None,
+        max_size_bytes: Optional[int] = None,
     ):
-        self.repository = repository or DocumentRepository()
-        self._storage_client = storage_client
-        self.bucket_name = settings.gcs_bucket_documents
-        self.max_size_bytes = settings.max_file_size_bytes
-
-    @property
-    def storage_client(self) -> Any:
-        """Lazily retrieve or return initialized Cloud Storage client."""
-        if self._storage_client is None:
-            self._storage_client = gcp_foundation.get_storage_client()
-        if self._storage_client is None:
-            raise DocumentStorageError(
-                "connect", "N/A", "Cloud Storage client is unavailable in current environment."
-            )
-        return self._storage_client
+        self.repository = repository
+        self._storage_provider = storage_provider
+        self.bucket_name = bucket_name or settings.gcs_bucket_documents
+        self.max_size_bytes = (
+            max_size_bytes if max_size_bytes is not None else settings.max_file_size_bytes
+        )
 
     def validate_document_input(self, filename: str, content_type: str, file_bytes: bytes) -> str:
         """Validate input file metadata, content type, and file size limits."""
@@ -121,7 +115,7 @@ class DocumentStorageService:
         file_bytes: bytes,
         document_id: Optional[str] = None,
     ) -> DocumentMetadata:
-        """Validate, fingerprint, and store document payload to Cloud Storage and Firestore.
+        """Validate, fingerprint, and store document payload to Storage Provider and metadata repository.
 
         Handles partial failures explicitly to prevent orphaned false-success records.
         """
@@ -145,64 +139,89 @@ class DocumentStorageService:
             checksum=checksum,
         )
 
-        # Step 1: Attempt Cloud Storage Object Upload
-        gcs_uploaded = False
+        # Fail closed if no storage provider is configured
+        if self._storage_provider is None:
+            metadata.document_status = DocumentStatus.STORAGE_FAILED
+            raise DocumentStorageError(
+                "upload_bytes",
+                document_id,
+                "No storage provider configured (fail-closed).",
+            )
+
+        # Step 1: Attempt Storage Provider Object Upload
+        storage_uploaded = False
         try:
-            bucket = self.storage_client.bucket(self.bucket_name)
-            blob = bucket.blob(object_path)
-            blob.upload_from_string(file_bytes, content_type=content_type)
-            gcs_uploaded = True
-            logger.info("Successfully uploaded object '%s' to bucket '%s'", object_path, self.bucket_name)
+            self._storage_provider.upload_bytes(
+                bucket_or_container=self.bucket_name,
+                object_path=object_path,
+                data=file_bytes,
+                content_type=content_type,
+            )
+            storage_uploaded = True
+            logger.info("Successfully uploaded object '%s' to '%s'", object_path, self.bucket_name)
         except Exception as err:
             metadata.document_status = DocumentStatus.STORAGE_FAILED
-            logger.error("Cloud Storage upload failed for document '%s': %s", document_id, err)
-            raise DocumentStorageError("upload_bytes", document_id, f"Cloud Storage upload failed: {err}") from err
+            logger.error("Storage upload failed for document '%s': %s", document_id, err)
+            raise DocumentStorageError("upload_bytes", document_id, f"Storage upload failed: {err}") from err
 
-        # Step 2: Persist Metadata to Firestore
+        # Step 2: Persist Metadata to Repository
         try:
             metadata.document_status = DocumentStatus.STORED
+            if self.repository is None:
+                raise RuntimeError("No document repository configured.")
             self.repository.create(metadata)
             logger.info("Successfully persisted document metadata for '%s'", document_id)
             return metadata
         except Exception as err:
-            # Handle Case B: GCS Upload succeeded but Firestore Metadata persistence failed
+            # Handle Case B: Upload succeeded but Metadata persistence failed
             logger.error(
-                "Firestore metadata persistence failed for '%s' after GCS upload. Executing cleanup fallback: %s",
+                "Metadata persistence failed for '%s' after upload. Executing cleanup fallback: %s",
                 document_id,
                 err,
             )
             metadata.document_status = DocumentStatus.STORAGE_FAILED
-            if gcs_uploaded:
+            if storage_uploaded:
                 try:
-                    bucket = self.storage_client.bucket(self.bucket_name)
-                    blob = bucket.blob(object_path)
-                    blob.delete()
-                    logger.info("Cleaned up orphaned GCS object '%s' after metadata failure", object_path)
+                    self._storage_provider.delete_object(
+                        bucket_or_container=self.bucket_name,
+                        object_path=object_path,
+                    )
+                    logger.info("Cleaned up orphaned storage object '%s' after metadata failure", object_path)
                 except Exception as cleanup_err:
-                    logger.error("Failed to cleanup orphaned GCS object '%s': %s", object_path, cleanup_err)
+                    logger.error("Failed to cleanup orphaned storage object '%s': %s", object_path, cleanup_err)
 
             raise DocumentStorageError(
                 "persist_metadata",
                 document_id,
-                f"Firestore metadata persistence failed; GCS object was cleaned up: {err}",
+                f"Metadata persistence failed; storage object was cleaned up: {err}",
             ) from err
 
     def get_document_metadata(self, document_id: str) -> DocumentMetadata:
-        """Retrieve DocumentMetadata from Firestore repository."""
+        """Retrieve DocumentMetadata from repository."""
+        if self.repository is None:
+            raise DocumentStorageError("get_metadata", document_id, "No repository configured.")
         return self.repository.get(document_id)
 
     def get_document_bytes(self, document_id: str) -> bytes:
-        """Retrieve raw document payload bytes from Cloud Storage using metadata object path."""
+        """Retrieve raw document payload bytes from Storage Provider using metadata object path."""
         metadata = self.get_document_metadata(document_id)
         if metadata.document_status != DocumentStatus.STORED:
             raise DocumentStorageError(
                 "download_bytes", document_id, f"Document status is '{metadata.document_status.value}', not STORED."
             )
 
+        if self._storage_provider is None:
+            raise DocumentStorageError(
+                "download_bytes",
+                document_id,
+                "No storage provider configured (fail-closed).",
+            )
+
         try:
-            bucket = self.storage_client.bucket(metadata.storage_bucket)
-            blob = bucket.blob(metadata.storage_object)
-            file_bytes = blob.download_as_bytes()
+            file_bytes = self._storage_provider.download_bytes(
+                bucket_or_container=metadata.storage_bucket,
+                object_path=metadata.storage_object,
+            )
 
             # Verify checksum integrity upon retrieval
             downloaded_checksum = calculate_checksum(file_bytes)
@@ -214,25 +233,35 @@ class DocumentStorageService:
                 )
 
             return file_bytes
+        except DocumentStorageError:
+            raise
         except Exception as err:
             raise DocumentStorageError("download_bytes", document_id, str(err)) from err
 
     def delete_document(self, document_id: str) -> bool:
-        """Perform controlled deletion of GCS storage artifact and Firestore metadata record."""
+        """Perform controlled deletion of storage artifact and update metadata record to DELETED."""
         metadata = self.get_document_metadata(document_id)
 
-        # Step 1: Delete GCS Object if present
+        if self._storage_provider is None:
+            raise DocumentStorageError(
+                "delete_object",
+                document_id,
+                "No storage provider configured (fail-closed).",
+            )
+
+        # Step 1: Delete Storage Object if present
         try:
-            bucket = self.storage_client.bucket(metadata.storage_bucket)
-            blob = bucket.blob(metadata.storage_object)
-            if blob.exists():
-                blob.delete()
-                logger.info("Deleted GCS object '%s'", metadata.storage_object)
+            self._storage_provider.delete_object(
+                bucket_or_container=metadata.storage_bucket,
+                object_path=metadata.storage_object,
+            )
+            logger.info("Deleted storage object '%s'", metadata.storage_object)
         except Exception as err:
-            logger.warning("Error deleting GCS object '%s': %s", metadata.storage_object, err)
+            logger.warning("Error deleting storage object '%s': %s", metadata.storage_object, err)
 
         # Step 2: Update Metadata status to DELETED
         metadata.document_status = DocumentStatus.DELETED
-        self.repository.update(metadata)
+        if self.repository is not None:
+            self.repository.update(metadata)
         logger.info("Updated document metadata for '%s' to DELETED", document_id)
         return True

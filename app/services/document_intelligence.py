@@ -28,7 +28,11 @@ class DocumentIntelligenceService:
         agent: Optional[DocumentIntelligenceAgent] = None,
         confidence_threshold: Optional[float] = None,
     ):
-        self.storage_service = storage_service or DocumentStorageService()
+        if storage_service is not None:
+            self.storage_service = storage_service
+        else:
+            from app.api.dependencies import get_document_storage_service
+            self.storage_service = get_document_storage_service()
         self.agent = agent or DocumentIntelligenceAgent()
         self.confidence_threshold = (
             confidence_threshold

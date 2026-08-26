@@ -48,7 +48,7 @@ def get_workflow_repository(provider: Optional[str] = None) -> IWorkflowReposito
     if selected in ("azure", "cosmos"):
         from app.infrastructure.azure.cosmos_repositories import CosmosWorkflowRepository
         return CosmosWorkflowRepository()
-    elif selected in ("gcp", "firestore"):
+    elif selected in ("gcp", "firestore", "mock", "in_memory"):
         from app.database.repositories.workflow_repository import WorkflowRepository
         return WorkflowRepository()
     raise ValueError(f"Unsupported workflow repository provider: '{selected}'")
@@ -60,7 +60,7 @@ def get_document_repository(provider: Optional[str] = None) -> IDocumentReposito
     if selected in ("azure", "cosmos"):
         from app.infrastructure.azure.cosmos_repositories import CosmosDocumentRepository
         return CosmosDocumentRepository()
-    elif selected in ("gcp", "firestore"):
+    elif selected in ("gcp", "firestore", "mock", "in_memory"):
         from app.database.repositories.document_repository import DocumentRepository
         return DocumentRepository()
     raise ValueError(f"Unsupported document repository provider: '{selected}'")
@@ -72,7 +72,7 @@ def get_audit_repository(provider: Optional[str] = None) -> IAuditEventRepositor
     if selected in ("azure", "cosmos"):
         from app.infrastructure.azure.cosmos_repositories import CosmosAuditEventRepository
         return CosmosAuditEventRepository()
-    elif selected in ("gcp", "firestore"):
+    elif selected in ("gcp", "firestore", "mock", "in_memory"):
         from app.database.repositories.audit_repository import AuditEventRepository
         return AuditEventRepository()
     raise ValueError(f"Unsupported audit repository provider: '{selected}'")
@@ -85,12 +85,11 @@ def get_storage_provider(provider: Optional[str] = None) -> IStorageProvider:
         from app.infrastructure.azure.blob_storage import AzureBlobStorageProvider
         return AzureBlobStorageProvider()
     elif selected in ("gcp", "gcs"):
-        # Returns AzureBlobStorageProvider / in-memory or GCS adapter conforming to IStorageProvider
-        from app.infrastructure.azure.blob_storage import AzureBlobStorageProvider
-        return AzureBlobStorageProvider()
-    elif selected in ("mock", "local"):
-        from app.infrastructure.azure.blob_storage import AzureBlobStorageProvider
-        return AzureBlobStorageProvider()
+        from app.infrastructure.gcp.storage import GCSStorageProvider
+        return GCSStorageProvider()
+    elif selected in ("mock", "local", "in_memory"):
+        from app.infrastructure.mock.storage import MockStorageProvider
+        return MockStorageProvider()
     raise ValueError(f"Unsupported storage provider: '{selected}'")
 
 
