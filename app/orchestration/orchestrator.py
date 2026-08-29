@@ -20,9 +20,10 @@ from app.orchestration.errors import (
     StateSynchronizationError,
     UnauthorizedReviewerError,
 )
+from app.core.contracts.state_manager import IWorkflowStateManager
+from app.infrastructure.factory import get_event_publisher, get_state_manager
 from app.orchestration.models import HumanReviewPayload
 from app.orchestration.outbox import OutboxPublisherWorker, WorkflowOutboxEvent
-from app.orchestration.state_manager import FirestoreStateManager
 
 logger = logging.getLogger(__name__)
 
@@ -45,18 +46,18 @@ class WorkflowOrchestrator:
     """Central Workflow Orchestrator for PaperTrail AI.
     
     Coordinates document analysis lifecycle across deterministic phase engines (Phases 7-12).
-    Maintains sole state transition authority using FirestoreStateManager and atomic transactions.
+    Maintains sole state transition authority using IWorkflowStateManager and atomic transactions.
     """
 
     def __init__(
         self,
-        state_manager: Optional[FirestoreStateManager] = None,
+        state_manager: Optional[IWorkflowStateManager] = None,
         publisher: Optional[BasePublisher] = None,
         max_retries: int = 3,
         owner_id: str = "orchestrator-worker-1",
     ) -> None:
-        self.state_manager = state_manager or FirestoreStateManager()
-        self.publisher = publisher or MockPubSubPublisher()
+        self.state_manager = state_manager or get_state_manager()
+        self.publisher = publisher or get_event_publisher()
         self.outbox_worker = OutboxPublisherWorker(self.publisher, max_retries=max_retries)
         self.max_retries = max_retries
         self.owner_id = owner_id

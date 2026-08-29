@@ -24,15 +24,23 @@ class FirestoreStateManager:
     Supports both Firestore production backend and lightweight in-memory storage for testing.
     """
 
+    _shared_workflows: Dict[str, AnalysisWorkflow] = {}
+    _shared_workflow_revisions: Dict[str, int] = {}
+    _shared_processed_events: Dict[str, Dict[str, Any]] = {}
+    _shared_claims: Dict[str, WorkflowExecutionClaim] = {}
+    _shared_outbox: List[WorkflowOutboxEvent] = []
+    _shared_engine_outputs: Dict[str, Dict[str, Any]] = {}
+
     def __init__(self, db_client: Optional[Any] = None) -> None:
         self.db_client = db_client
         # In-memory storage structures for local testing / mock mode
-        self._workflows: Dict[str, AnalysisWorkflow] = {}
-        self._workflow_revisions: Dict[str, int] = {}
-        self._processed_events: Dict[str, Dict[str, Any]] = {}  # logical_key -> metadata
-        self._claims: Dict[str, WorkflowExecutionClaim] = {}     # logical_key -> claim
-        self._outbox: List[WorkflowOutboxEvent] = []
-        self._engine_outputs: Dict[str, Dict[str, Any]] = {}    # workflow_id:revision -> output
+        self._workflows: Dict[str, AnalysisWorkflow] = self._shared_workflows
+        self._workflow_revisions: Dict[str, int] = self._shared_workflow_revisions
+        self._processed_events: Dict[str, Dict[str, Any]] = self._shared_processed_events
+        self._claims: Dict[str, WorkflowExecutionClaim] = self._shared_claims
+        self._outbox: List[WorkflowOutboxEvent] = self._shared_outbox
+        self._engine_outputs: Dict[str, Dict[str, Any]] = self._shared_engine_outputs
+
 
     def get_workflow(self, workflow_id: str) -> Optional[AnalysisWorkflow]:
         """Retrieve current workflow instance."""

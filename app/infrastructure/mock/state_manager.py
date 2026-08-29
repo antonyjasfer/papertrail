@@ -25,14 +25,22 @@ class InMemoryStateManager:
     Implements IWorkflowStateManager protocol.
     """
 
+    _shared_workflows: Dict[str, AnalysisWorkflow] = {}
+    _shared_workflow_revisions: Dict[str, int] = {}
+    _shared_processed_events: Dict[str, Dict[str, Any]] = {}
+    _shared_claims: Dict[str, WorkflowExecutionClaim] = {}
+    _shared_outbox: List[WorkflowOutboxEvent] = []
+    _shared_engine_outputs: Dict[str, Dict[str, Any]] = {}
+
     def __init__(self, clock: Optional[IClock] = None) -> None:
         self.clock = clock or ProductionClock()
-        self._workflows: Dict[str, AnalysisWorkflow] = {}
-        self._workflow_revisions: Dict[str, int] = {}
-        self._processed_events: Dict[str, Dict[str, Any]] = {}
-        self._claims: Dict[str, WorkflowExecutionClaim] = {}
-        self._outbox: List[WorkflowOutboxEvent] = []
-        self._engine_outputs: Dict[str, Dict[str, Any]] = {}
+        self._workflows: Dict[str, AnalysisWorkflow] = self._shared_workflows
+        self._workflow_revisions: Dict[str, int] = self._shared_workflow_revisions
+        self._processed_events: Dict[str, Dict[str, Any]] = self._shared_processed_events
+        self._claims: Dict[str, WorkflowExecutionClaim] = self._shared_claims
+        self._outbox: List[WorkflowOutboxEvent] = self._shared_outbox
+        self._engine_outputs: Dict[str, Dict[str, Any]] = self._shared_engine_outputs
+
 
     def get_workflow(self, workflow_id: str) -> Optional[AnalysisWorkflow]:
         return self._workflows.get(workflow_id)

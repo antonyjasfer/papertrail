@@ -1,26 +1,29 @@
+from datetime import datetime, timezone
 import logging
 from typing import Any, Dict, Optional
 import uuid
 
+from app.core.contracts.state_manager import IWorkflowStateManager
 from app.core.state import AnalysisWorkflow, WorkflowState
-from app.events.publisher import MockPubSubPublisher
+from app.events.publisher import BasePublisher, MockPubSubPublisher
 from app.events.schemas import EventType, WorkflowEvent
+from app.infrastructure.factory import get_event_publisher, get_state_manager
 from app.orchestration.orchestrator import WorkflowOrchestrator
-from app.orchestration.state_manager import FirestoreStateManager
 
 logger = logging.getLogger(__name__)
 
 
 class PipelineRunner:
-    """High-level coordinator for starting, executing, and inspecting pipeline workflows."""
+    """High-level coordinator for starting, executing, and inspecting pipeline workflows (for testing/local execution)."""
 
     def __init__(
         self,
         orchestrator: Optional[WorkflowOrchestrator] = None,
-        state_manager: Optional[FirestoreStateManager] = None,
+        state_manager: Optional[IWorkflowStateManager] = None,
+        publisher: Optional[BasePublisher] = None,
     ) -> None:
-        self.state_manager = state_manager or FirestoreStateManager()
-        self.publisher = MockPubSubPublisher()
+        self.state_manager = state_manager or (orchestrator.state_manager if orchestrator else get_state_manager())
+        self.publisher = publisher or (orchestrator.publisher if orchestrator else get_event_publisher())
         self.orchestrator = orchestrator or WorkflowOrchestrator(
             state_manager=self.state_manager,
             publisher=self.publisher,
@@ -35,8 +38,30 @@ class PipelineRunner:
 
     def step(self, workflow_id: str) -> AnalysisWorkflow:
         """Execute one pipeline step by dispatching pending outbox event if available."""
-        outbox_list = self.orchestrator.state_manager._outbox
-        pending = [r for r in outbox_list if r.workflow_id == workflow_id and r.status.value == "PUBLISHED"]
+        outbox_list = getattr(self.state_manager, "_outbox", [])
+        pending = [
+            r for r in outbox_list
+            if r.workflow_id == workflow_id and getattr(r.status, "value", str(r.status)) in ("PUBLISHED", "PENDING")
+        ]
+        if not pending and hasattr(self.state_manager, "_items"):
+            outbox_dict_items = [v for k, v in self.state_manager._items.items() if k.startswith(f"{workflow_id}:outbox:")]
+            if outbox_dict_items:
+                latest_item = sorted(outbox_dict_items, key=lambda x: x.get("workflow_revision", 1))[-1]
+                event = WorkflowEvent(
+                    event_id=latest_item["event_id"],
+                    workflow_id=workflow_id,
+                    document_id=latest_item["document_id"],
+                    event_type=EventType(latest_item["event_type"]),
+                    current_state="",
+                    workflow_revision=latest_item["workflow_revision"],
+                    payload_hash=latest_item.get("payload_hash", ""),
+                    payload=latest_item.get("payload", {}),
+                    event_timestamp=datetime.now(timezone.utc),
+                    correlation_id=workflow_id,
+                )
+                workflow, _ = self.orchestrator.dispatch(event)
+                return workflow
+
         if not pending:
             workflow = self.state_manager.get_workflow(workflow_id)
             return workflow

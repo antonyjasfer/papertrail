@@ -1,12 +1,18 @@
 import logging
 from typing import Optional
+from fastapi import Depends
 
 from app.core.config import settings
+from app.core.contracts.state_manager import IWorkflowStateManager
+from app.events.publisher import BasePublisher
 from app.infrastructure.factory import (
     _resolve_provider,
     get_document_repository,
+    get_event_publisher,
+    get_state_manager,
     get_storage_provider,
 )
+from app.orchestration.orchestrator import WorkflowOrchestrator
 from app.services.document_storage import DocumentStorageService
 
 logger = logging.getLogger("papertrail.api.dependencies")
@@ -38,3 +44,26 @@ def get_document_storage_service() -> DocumentStorageService:
         bucket_name=bucket_or_container,
         max_size_bytes=settings.max_file_size_bytes,
     )
+
+
+def get_workflow_state_manager() -> IWorkflowStateManager:
+    """Dependency provider returning the active cloud/mock workflow state manager."""
+    return get_state_manager()
+
+
+def get_workflow_event_publisher() -> BasePublisher:
+    """Dependency provider returning the active cloud/mock event publisher."""
+    return get_event_publisher()
+
+
+def get_workflow_orchestrator(
+    state_manager: IWorkflowStateManager = Depends(get_workflow_state_manager),
+    publisher: BasePublisher = Depends(get_workflow_event_publisher),
+) -> WorkflowOrchestrator:
+    """Dependency provider returning an initialized instance of WorkflowOrchestrator."""
+    return WorkflowOrchestrator(
+        state_manager=state_manager,
+        publisher=publisher,
+        owner_id="api-orchestrator",
+    )
+

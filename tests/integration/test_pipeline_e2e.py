@@ -22,7 +22,7 @@ def test_pipeline_runner_full_e2e():
 
 
 def test_orchestration_api_endpoints():
-    # Start pipeline via API
+    # Start pipeline via API (asynchronous start returns 201 UPLOADED)
     resp_start = client.post(
         "/api/v1/pipeline/start",
         json={"document_id": "doc-api-200", "workflow_id": "wf-api-200"},
@@ -30,11 +30,14 @@ def test_orchestration_api_endpoints():
     assert resp_start.status_code == 201
     data_start = resp_start.json()
     assert data_start["workflow_id"] == "wf-api-200"
-    assert data_start["current_state"] == "COMPLETED"
+    assert data_start["current_state"] == "UPLOADED"
+    assert data_start["workflow_revision"] == 1
 
     # Inspect pipeline status via API
     resp_status = client.get("/api/v1/pipeline/wf-api-200/status")
     assert resp_status.status_code == 200
     data_status = resp_status.json()
     assert data_status["workflow_id"] == "wf-api-200"
-    assert data_status["current_state"] == "COMPLETED"
+    assert data_status["current_state"] == "UPLOADED"
+    assert data_status["workflow_revision"] == 1
+
