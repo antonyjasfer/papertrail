@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     host: str = "127.0.0.1"
     port: int = 8080
     phase: str = "Phase 13 - Deterministic Workflow Orchestration & End-to-End Pipeline"
+    log_level: str = "INFO"
 
     # Gemini AI Model & Document Intelligence Settings
     gemini_model: str = "gemini-3.5-flash"

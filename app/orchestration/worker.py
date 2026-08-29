@@ -19,7 +19,7 @@ from app.infrastructure.factory import get_event_publisher, get_state_manager
 from app.orchestration.orchestrator import WorkflowOrchestrator
 
 logging.basicConfig(
-    level=getattr(logging, settings.log_level.upper(), logging.INFO),
+    level=getattr(logging, getattr(settings, "log_level", "INFO").upper(), logging.INFO),
     format="%(asctime)s [%(levelname)s] [%(name)s] %(message)s",
 )
 logger = logging.getLogger("papertrail.worker")
