@@ -1,0 +1,49 @@
+properties:
+  template:
+    containers:
+    - args: []
+      command:
+      - python
+      - -m
+      - app.orchestration.worker
+      env:
+      - name: ENVIRONMENT
+        value: development
+      - name: PAPERTRAIL_CLOUD_PROVIDER
+        value: azure
+      - name: AZURE_COSMOS_ENDPOINT
+        value: https://papertrailcosmosdev2026.documents.azure.com:443/
+      - name: AZURE_STORAGE_ACCOUNT_URL
+        value: https://papertrailstoragedev2026.blob.core.windows.net/
+      - name: AZURE_SERVICEBUS_NAMESPACE
+        value: papertrail-sb-dev-2026.servicebus.windows.net
+      - name: AZURE_KEYVAULT_URL
+        value: https://papertrail-kv-dev-2026.vault.azure.net/
+      - name: AZURE_CLIENT_ID
+        value: 668e039e-71fd-46dd-bcbb-406a7b8849ea
+      image: papertrailacrdev.azurecr.io/papertrail@sha256:77424605d5a2eb77ec24a06b77d889e6e1239980cb5be5bcffb9aa2b7b5e7121
+      name: papertrail-worker
+      resources:
+        cpu: 0.5
+        ephemeralStorage: 2Gi
+        memory: 1Gi
+    initContainers: null
+    revisionSuffix: ''
+    scale:
+      cooldownPeriod: 300
+      maxReplicas: 1
+      minReplicas: 0
+      pollingInterval: 30
+      rules:
+      - custom:
+          auth: []
+          metadata:
+            messageCount: '1'
+            namespace: papertrail-sb-dev-2026.servicebus.windows.net
+            subscriptionName: papertrail-orchestrator-sub
+            topicName: papertrail-workflow-events
+          type: azure-servicebus
+        name: servicebus-scale-rule
+    serviceBinds: null
+    terminationGracePeriodSeconds: null
+    volumes: null
