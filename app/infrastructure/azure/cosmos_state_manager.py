@@ -7,6 +7,8 @@ from typing import Any, Dict, List, Optional, Tuple
 from app.core.config import settings
 from app.core.contracts.clock import IClock, ProductionClock
 from app.core.contracts.state_manager import IWorkflowStateManager
+from app.core.errors import ErrorCategory
+from app.core.logging import CorrelationContext, log_event
 from app.core.state import AnalysisWorkflow, WorkflowState, validate_transition
 from app.events.schemas import EventType, WorkflowEvent, compute_payload_hash
 from app.infrastructure.azure.foundation import azure_foundation
@@ -55,7 +57,15 @@ class CosmosStateManager:
                     db = cosmos_client.get_database_client(self.database_name)
                     self._container = db.get_container_client(self.container_name)
                 except Exception as err:
-                    logger.warning("Could not obtain Cosmos container '%s': %s", self.container_name, err)
+                    log_event(
+                        logger=logger,
+                        level=logging.WARNING,
+                        message=f"Could not obtain Cosmos container '{self.container_name}': {err}",
+                        component="cosmos_state_manager",
+                        operation="get_container",
+                        error_category=ErrorCategory.COSMOS_ERROR.value,
+                        error_details=str(err),
+                    )
         return self._container
 
     def get_workflow(self, workflow_id: str) -> Optional[AnalysisWorkflow]:
@@ -149,8 +159,29 @@ class CosmosStateManager:
                 else:
                     self.container.upsert_item(wf_item)
                     self.container.upsert_item(outbox_item)
+
+                log_event(
+                    logger=logger,
+                    level=logging.INFO,
+                    message=f"Created workflow '{workflow_id}' and outbox item in Cosmos DB (Partition /{workflow_id})",
+                    component="cosmos_state_manager",
+                    operation="create_workflow_batch",
+                    workflow_id=workflow_id,
+                    document_id=document_id,
+                    outcome="COMMITTED",
+                )
             except Exception as err:
-                logger.error("Cosmos transactional batch create_workflow failed: %s", err)
+                log_event(
+                    logger=logger,
+                    level=logging.ERROR,
+                    message=f"Cosmos transactional batch create_workflow failed: {err}",
+                    component="cosmos_state_manager",
+                    operation="create_workflow_batch",
+                    workflow_id=workflow_id,
+                    document_id=document_id,
+                    error_category=ErrorCategory.COSMOS_ERROR.value,
+                    error_details=str(err),
+                )
                 raise
 
         # Save to in-memory store
@@ -164,24 +195,17 @@ class CosmosStateManager:
             event_id=outbox_id,
             event_type=EventType.DOCUMENT_UPLOADED,
             workflow_revision=1,
-            payload_hash=compute_payload_hash(payload),
+            payload_hash=outbox_item["payload_hash"],
             payload=payload,
             status=OutboxStatus.PENDING,
             created_at=now,
         )
-        logger.info(
-            "[CosmosStateManager] Created workflow '%s' at revision 1.",
-            workflow_id,
-        )
         return workflow, outbox_event
 
-    def check_idempotency(
-        self, event: WorkflowEvent
-    ) -> Tuple[bool, Optional[Dict[str, Any]]]:
-        """Check if incoming event has already been processed."""
+    def check_idempotency(self, event: WorkflowEvent) -> Tuple[bool, Optional[Dict[str, Any]]]:
+        """Check idempotency record for event."""
         workflow_id = event.workflow_id
-        current_revision = self.get_workflow_revision(workflow_id)
-        logical_key = event.logical_event_key if hasattr(event, "logical_event_key") and event.logical_event_key else event.get_logical_event_key()
+        logical_key = event.get_logical_event_key()
         idemp_id = f"idemp:{_hash_key(logical_key)}"
 
         idemp_item = None
@@ -190,8 +214,10 @@ class CosmosStateManager:
                 idemp_item = self.container.read_item(item=idemp_id, partition_key=workflow_id)
             except Exception:
                 idemp_item = None
-        if not idemp_item:
+        else:
             idemp_item = self._items.get(f"{workflow_id}:{idemp_id}")
+
+        current_revision = self.get_workflow_revision(workflow_id)
 
         if event.workflow_revision < current_revision:
             if idemp_item:
@@ -409,8 +435,30 @@ class CosmosStateManager:
                         self.container.upsert_item(idemp_item)
                     if outbox_item:
                         self.container.upsert_item(outbox_item)
+
+                log_event(
+                    logger=logger,
+                    level=logging.INFO,
+                    message=f"Committed Cosmos TransactionalBatch for '{workflow_id}' (Rev {stored_revision} -> {new_revision}, {previous_state.value} -> {target_state.value})",
+                    component="cosmos_state_manager",
+                    operation="commit_transaction_batch",
+                    workflow_id=workflow_id,
+                    previous_state=previous_state.value,
+                    target_state=target_state.value,
+                    workflow_revision=new_revision,
+                    outcome="COMMITTED",
+                )
             except Exception as err:
-                logger.error("Cosmos TransactionalBatch commit failed: %s", err)
+                log_event(
+                    logger=logger,
+                    level=logging.ERROR,
+                    message=f"Cosmos TransactionalBatch commit failed: {err}",
+                    component="cosmos_state_manager",
+                    operation="commit_transaction_batch",
+                    workflow_id=workflow_id,
+                    error_category=ErrorCategory.COSMOS_ERROR.value,
+                    error_details=str(err),
+                )
                 raise StateSynchronizationError(workflow_id, expected_revision, stored_revision) from err
 
         # Save to in-memory store
@@ -422,14 +470,6 @@ class CosmosStateManager:
         if outbox_item:
             self._items[f"{workflow_id}:{outbox_item['id']}"] = outbox_item
 
-        logger.info(
-            "[CosmosStateManager] Committed transition for '%s': %s -> %s (Rev %d -> %d).",
-            workflow_id,
-            previous_state.value,
-            target_state.value,
-            stored_revision,
-            new_revision,
-        )
         return workflow, outbox_event
 
     def _deserialize_workflow(self, data: Dict[str, Any]) -> AnalysisWorkflow:

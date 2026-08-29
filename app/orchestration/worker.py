@@ -2,6 +2,7 @@
 
 Consumes workflow lifecycle events from Azure Service Bus (or GCP Pub/Sub / in-memory),
 executes the Phase 1-13 deterministic orchestration engine, and safely settles messages.
+Instrumented with structured logging, correlation propagation, and operational metrics.
 """
 
 import json
@@ -13,15 +14,16 @@ import time
 from typing import Optional
 
 from app.core.config import settings
+from app.core.errors import ErrorCategory, classify_error
+from app.core.logging import CorrelationContext, log_event, setup_structured_logging
+from app.core.metrics import metrics
 from app.events.schemas import WorkflowEvent
 from app.infrastructure.azure.foundation import azure_foundation
 from app.infrastructure.factory import get_event_publisher, get_state_manager
 from app.orchestration.orchestrator import WorkflowOrchestrator
 
-logging.basicConfig(
-    level=getattr(logging, getattr(settings, "log_level", "INFO").upper(), logging.INFO),
-    format="%(asctime)s [%(levelname)s] [%(name)s] %(message)s",
-)
+# Initialize structured logging for background worker
+setup_structured_logging(level=settings.log_level)
 logger = logging.getLogger("papertrail.worker")
 
 
@@ -30,19 +32,28 @@ class WorkflowWorker:
 
     def __init__(self) -> None:
         self.running = True
+        self.worker_id = f"worker-{os.getpid()}"
         self.state_manager = get_state_manager()
         self.publisher = get_event_publisher()
         self.orchestrator = WorkflowOrchestrator(
             state_manager=self.state_manager,
             publisher=self.publisher,
-            owner_id=f"worker-{os.getpid()}",
+            owner_id=self.worker_id,
         )
         self._setup_signals()
 
     def _setup_signals(self) -> None:
         """Register graceful shutdown signal handlers."""
         def handle_shutdown(signum, frame):
-            logger.info(f"[Worker] Received signal {signum}. Initiating graceful shutdown...")
+            log_event(
+                logger=logger,
+                level=logging.INFO,
+                message=f"Received signal {signum}. Initiating graceful shutdown...",
+                component="worker",
+                operation="shutdown_signal_received",
+                worker_id=self.worker_id,
+                signal=signum,
+            )
             self.running = False
 
         signal.signal(signal.SIGINT, handle_shutdown)
@@ -54,8 +65,15 @@ class WorkflowWorker:
         subscription_name = settings.azure_servicebus_subscription_orchestrator
         fqdn = settings.azure_servicebus_namespace
 
-        logger.info(
-            f"[Worker] Starting Azure Service Bus worker on {fqdn} -> {topic_name}/{subscription_name}..."
+        log_event(
+            logger=logger,
+            level=logging.INFO,
+            message=f"Starting Azure Service Bus worker on {fqdn} -> {topic_name}/{subscription_name}",
+            component="worker",
+            operation="worker_startup",
+            worker_id=self.worker_id,
+            topic=topic_name,
+            subscription=subscription_name,
         )
 
         servicebus_client = azure_foundation.get_servicebus_client()
@@ -67,7 +85,14 @@ class WorkflowWorker:
                 max_wait_time=5,
             )
             with receiver:
-                logger.info("[Worker] Service Bus receiver connected and ready for events.")
+                log_event(
+                    logger=logger,
+                    level=logging.INFO,
+                    message="Service Bus receiver connected and ready for events.",
+                    component="worker",
+                    operation="receiver_connected",
+                    worker_id=self.worker_id,
+                )
                 while self.running:
                     try:
                         messages = receiver.receive_messages(max_message_count=1, max_wait_time=5)
@@ -81,45 +106,137 @@ class WorkflowWorker:
                     except Exception as err:
                         if not self.running:
                             break
-                        logger.error(f"[Worker] Error in receive loop: {err}", exc_info=True)
+                        log_event(
+                            logger=logger,
+                            level=logging.ERROR,
+                            message=f"Error in Service Bus receive loop: {err}",
+                            component="worker",
+                            operation="receive_loop_error",
+                            error_category=classify_error(err).value,
+                            error_details=str(err),
+                            worker_id=self.worker_id,
+                        )
                         time.sleep(2)
 
-        logger.info("[Worker] Azure Service Bus worker shutdown cleanly.")
+        log_event(
+            logger=logger,
+            level=logging.INFO,
+            message="Azure Service Bus worker shutdown cleanly.",
+            component="worker",
+            operation="worker_shutdown_complete",
+            worker_id=self.worker_id,
+        )
 
     def _process_azure_message(self, receiver, msg) -> None:
         """Process an individual Azure Service Bus message."""
+        t0 = time.perf_counter()
+        msg_id = getattr(msg, "message_id", "unknown-msg")
+        delivery_count = getattr(msg, "delivery_count", 1)
+
         try:
-            body_bytes = b"".join(msg.body) if hasattr(msg.body, "__iter__") and not isinstance(msg.body, (bytes, bytearray)) else bytes(msg.body)
+            body_bytes = (
+                b"".join(msg.body)
+                if hasattr(msg.body, "__iter__") and not isinstance(msg.body, (bytes, bytearray))
+                else bytes(msg.body)
+            )
             body_str = body_bytes.decode("utf-8")
             data_dict = json.loads(body_str)
 
             event = WorkflowEvent(**data_dict)
-            logger.info(
-                f"[Worker] Processing event '{event.event_type.value}' for workflow '{event.workflow_id}' (Event ID: {event.event_id})"
-            )
+            workflow_id = event.workflow_id
+            document_id = event.document_id
 
-            # Dispatch to orchestrator
-            workflow, outbox_event = self.orchestrator.dispatch(event)
+            with CorrelationContext(
+                workflow_id=workflow_id,
+                document_id=document_id,
+                message_id=msg_id,
+                delivery_count=delivery_count,
+            ):
+                log_event(
+                    logger=logger,
+                    level=logging.INFO,
+                    message=f"Received event '{event.event_type.value}' for workflow '{workflow_id}' (Delivery: {delivery_count})",
+                    component="worker",
+                    operation="message_received",
+                    workflow_id=workflow_id,
+                    document_id=document_id,
+                    event_type=event.event_type.value,
+                    message_id=msg_id,
+                    delivery_count=delivery_count,
+                )
 
-            # If an outbox event was generated, process it
-            if outbox_event:
-                self.orchestrator.outbox_worker.add_outbox_event(outbox_event)
-                self.orchestrator.outbox_worker.process_pending()
+                # Dispatch to orchestrator
+                workflow, outbox_event = self.orchestrator.dispatch(event)
 
-            # Settle message on success
-            receiver.complete_message(msg)
-            logger.info(f"[Worker] Successfully settled message {msg.message_id}")
+                # If an outbox event was generated, process it
+                if outbox_event:
+                    self.orchestrator.outbox_worker.add_outbox_event(outbox_event)
+                    self.orchestrator.outbox_worker.process_pending()
+
+                # Settle message on success
+                receiver.complete_message(msg)
+                duration_ms = (time.perf_counter() - t0) * 1000.0
+                metrics.increment("service_bus_messages_processed_total")
+
+                log_event(
+                    logger=logger,
+                    level=logging.INFO,
+                    message=f"Successfully processed and settled message {msg_id} in {duration_ms:.2f}ms",
+                    component="worker",
+                    operation="message_settled",
+                    workflow_id=workflow_id,
+                    document_id=document_id,
+                    message_id=msg_id,
+                    duration_ms=duration_ms,
+                    outcome="COMPLETED",
+                )
 
         except json.JSONDecodeError as jde:
-            logger.error(f"[Worker] Malformed message body (dead-lettering): {jde}")
+            metrics.increment("service_bus_deadletter_total")
+            log_event(
+                logger=logger,
+                level=logging.ERROR,
+                message=f"Malformed message body (dead-lettering): {jde}",
+                component="worker",
+                operation="message_deadlettered",
+                message_id=msg_id,
+                outcome="DEADLETTERED",
+                error_category=ErrorCategory.VALIDATION_ERROR.value,
+                error_details=str(jde),
+            )
             receiver.dead_letter_message(msg, reason="MalformedJSON", error_description=str(jde))
+
         except Exception as e:
-            logger.error(f"[Worker] Unhandled error during event dispatch: {e}", exc_info=True)
-            if getattr(msg, "delivery_count", 1) >= 3:
-                logger.warning(f"[Worker] Exceeded max retries (dead-lettering message {msg.message_id}): {e}")
+            duration_ms = (time.perf_counter() - t0) * 1000.0
+            err_cat = classify_error(e)
+            if delivery_count >= 3:
+                metrics.increment("service_bus_deadletter_total")
+                log_event(
+                    logger=logger,
+                    level=logging.WARNING,
+                    message=f"Exceeded max retries (dead-lettering message {msg_id}): {e}",
+                    component="worker",
+                    operation="message_deadlettered",
+                    message_id=msg_id,
+                    delivery_count=delivery_count,
+                    outcome="DEADLETTERED",
+                    error_category=err_cat.value,
+                    error_details=str(e),
+                )
                 receiver.dead_letter_message(msg, reason="MaxRetriesExceeded", error_description=str(e))
             else:
-                logger.info(f"[Worker] Abandoning message {msg.message_id} for retry.")
+                log_event(
+                    logger=logger,
+                    level=logging.INFO,
+                    message=f"Abandoning message {msg_id} for retry (Attempt {delivery_count}): {e}",
+                    component="worker",
+                    operation="message_abandoned",
+                    message_id=msg_id,
+                    delivery_count=delivery_count,
+                    outcome="ABANDONED_FOR_RETRY",
+                    error_category=err_cat.value,
+                    error_details=str(e),
+                )
                 receiver.abandon_message(msg)
 
     def run(self) -> None:
@@ -128,7 +245,14 @@ class WorkflowWorker:
         if provider == "azure":
             self.run_azure()
         else:
-            logger.info(f"[Worker] Running in non-Azure mode ({provider}). Worker idle.")
+            log_event(
+                logger=logger,
+                level=logging.INFO,
+                message=f"Running in non-Azure mode ({provider}). Worker idle.",
+                component="worker",
+                operation="worker_idle",
+                worker_id=self.worker_id,
+            )
             while self.running:
                 time.sleep(1)
 

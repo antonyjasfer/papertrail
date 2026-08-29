@@ -1,0 +1,116 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.Portal/dashboards",
+      "apiVersion": "2020-09-01-preview",
+      "name": "PaperTrail-AI-Production-Operations-Dashboard",
+      "location": "centralindia",
+      "tags": {
+        "hidden-title": "PaperTrail AI — Production Operations & SRE Dashboard",
+        "project": "papertrail",
+        "phase": "17"
+      },
+      "properties": {
+        "lenses": [
+          {
+            "order": 0,
+            "parts": [
+              {
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "colSpan": 4,
+                  "rowSpan": 3
+                },
+                "metadata": {
+                  "inputs": [],
+                  "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+                  "settings": {
+                    "content": {
+                      "Query": "ContainerAppConsoleLogs_CL | where TimeGenerated > ago(1h) | where ContainerAppName_s == 'papertrail-api' | extend LogData = parse_json(Log_s) | where LogData.component == 'api' | summarize TotalRequests = count(), Errors = countif(toint(LogData.http_status) >= 400) by bin(TimeGenerated, 5m) | render timechart",
+                      "PartTitle": "API Request Volume & Error Rate (5m)"
+                    }
+                  }
+                }
+              },
+              {
+                "position": {
+                  "x": 4,
+                  "y": 0,
+                  "colSpan": 4,
+                  "rowSpan": 3
+                },
+                "metadata": {
+                  "inputs": [],
+                  "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+                  "settings": {
+                    "content": {
+                      "Query": "ContainerAppConsoleLogs_CL | where TimeGenerated > ago(6h) | extend LogData = parse_json(Log_s) | where LogData.operation == 'state_transition' | summarize Count = count() by State = tostring(LogData.target_state) | render barchart",
+                      "PartTitle": "Workflow State Transitions"
+                    }
+                  }
+                }
+              },
+              {
+                "position": {
+                  "x": 8,
+                  "y": 0,
+                  "colSpan": 4,
+                  "rowSpan": 3
+                },
+                "metadata": {
+                  "inputs": [],
+                  "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+                  "settings": {
+                    "content": {
+                      "Query": "ContainerAppConsoleLogs_CL | where TimeGenerated > ago(12h) | extend LogData = parse_json(Log_s) | where LogData.operation in ('adapter_completed', 'audit_chain_sealed', 'report_generated') | summarize AvgDurationMs = avg(todouble(LogData.duration_ms)), P95Ms = percentile(todouble(LogData.duration_ms), 95) by Adapter = coalesce(tostring(LogData.adapter), tostring(LogData.component)) | render columnchart",
+                      "PartTitle": "Engine Adapter Latency (Phases 7–12)"
+                    }
+                  }
+                }
+              },
+              {
+                "position": {
+                  "x": 0,
+                  "y": 3,
+                  "colSpan": 6,
+                  "rowSpan": 3
+                },
+                "metadata": {
+                  "inputs": [],
+                  "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+                  "settings": {
+                    "content": {
+                      "Query": "ContainerAppConsoleLogs_CL | where TimeGenerated > ago(12h) | extend LogData = parse_json(Log_s) | where LogData.severity in ('ERROR', 'WARNING') or isnotempty(LogData.error_category) | summarize Count = count() by ErrorCategory = tostring(LogData.error_category), Component = tostring(LogData.component) | render piechart",
+                      "PartTitle": "Error Taxonomy Breakdown"
+                    }
+                  }
+                }
+              },
+              {
+                "position": {
+                  "x": 6,
+                  "y": 3,
+                  "colSpan": 6,
+                  "rowSpan": 3
+                },
+                "metadata": {
+                  "inputs": [],
+                  "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+                  "settings": {
+                    "content": {
+                      "Query": "ContainerAppConsoleLogs_CL | where TimeGenerated > ago(24h) | extend LogData = parse_json(Log_s) | where LogData.target_state == 'COMPLETED' or LogData.operation == 'report_generated' | summarize CompletedAt = max(TimeGenerated), FinalRevision = max(toint(LogData.workflow_revision)), ReportId = take_anyif(tostring(LogData.report_id), isnotempty(LogData.report_id)) by WorkflowId = tostring(LogData.workflow_id) | order by CompletedAt desc | take 15",
+                      "PartTitle": "Recent Completed Workflows"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+// ============================================================================
+// PaperTrail AI — Phase 17 Production KQL Monitoring Queries
+// Target Tables: ContainerAppConsoleLogs_CL, ContainerAppSystemLogs_CL
+// Designed for Azure Log Analytics Workspace
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// 1. END-TO-END WORKFLOW TRACE BY WORKFLOW_ID
+// Returns complete chronological execution trace across API, Orchestrator, Adapters, and Worker
+// ----------------------------------------------------------------------------
+ContainerAppConsoleLogs_CL
+| where TimeGenerated > ago(24h)
+| extend LogData = parse_json(Log_s)
+| where LogData.workflow_id == "wf-p16-live-doc-527b2b2472f3" or Log_s contains "wf-p16-live-doc-527b2b2472f3"
+| project
+    TimeGenerated,
+    ContainerAppName_s,
+    Severity = tostring(LogData.severity),
+    Component = tostring(LogData.component),
+    Operation = tostring(LogData.operation),
+    State = tostring(LogData.current_state),
+    TargetState = tostring(LogData.target_state),
+    Revision = tostring(LogData.workflow_revision),
+    Outcome = tostring(LogData.outcome),
+    DurationMs = todouble(LogData.duration_ms),
+    Message = tostring(LogData.message)
+| order by TimeGenerated asc
+
+// ----------------------------------------------------------------------------
+// 2. RECENT OPERATIONAL ERRORS BY CATEGORY
+// Categorizes errors according to standard Phase 17 Error Taxonomy
+// ----------------------------------------------------------------------------
+ContainerAppConsoleLogs_CL
+| where TimeGenerated > ago(6h)
+| extend LogData = parse_json(Log_s)
+| where LogData.severity in ("ERROR", "WARNING") or LogData.outcome in ("FAILED", "DEADLETTERED", "CLAIM_CONFLICT")
+| summarize Count = count() by
+    ErrorCategory = tostring(LogData.error_category),
+    Component = tostring(LogData.component),
+    Operation = tostring(LogData.operation),
+    ContainerAppName_s
+| order by Count desc
+
+// ----------------------------------------------------------------------------
+// 3. WORKER DEAD-LETTER & PROCESSING FAILURES
+// Identifies dead-lettered messages, retry exhaustions, and JSON errors
+// ----------------------------------------------------------------------------
+ContainerAppConsoleLogs_CL
+| where TimeGenerated > ago(12h)
+| where ContainerAppName_s == "papertrail-worker"
+| extend LogData = parse_json(Log_s)
+| where LogData.operation in ("message_deadlettered", "receive_loop_error", "message_abandoned")
+| project
+    TimeGenerated,
+    Operation = tostring(LogData.operation),
+    WorkflowId = tostring(LogData.workflow_id),
+    MessageId = tostring(LogData.message_id),
+    DeliveryCount = toint(LogData.delivery_count),
+    ErrorCategory = tostring(LogData.error_category),
+    ErrorDetails = tostring(LogData.error_details),
+    Message = tostring(LogData.message)
+| order by TimeGenerated desc
+
+// ----------------------------------------------------------------------------
+// 4. API ERROR RATE & LATENCY P95 (HTTP 4xx / 5xx)
+// Tracks HTTP API performance, duration percentiles, and failure codes
+// ----------------------------------------------------------------------------
+ContainerAppConsoleLogs_CL
+| where TimeGenerated > ago(1h)
+| where ContainerAppName_s == "papertrail-api"
+| extend LogData = parse_json(Log_s)
+| where LogData.component == "api" and isnotempty(LogData.http_status)
+| summarize
+    TotalRequests = count(),
+    Errors = countif(toint(LogData.http_status) >= 400),
+    AvgDurationMs = avg(todouble(LogData.duration_ms)),
+    P95DurationMs = percentile(todouble(LogData.duration_ms), 95)
+    by bin(TimeGenerated, 5m), Endpoint = tostring(LogData.http_path), Method = tostring(LogData.http_method)
+| order by TimeGenerated desc
+
+// ----------------------------------------------------------------------------
+// 5. SLOW WORKFLOW DETECTOR (> 30s Execution Duration)
+// Computes elapsed time from start to terminal state
+// ----------------------------------------------------------------------------
+ContainerAppConsoleLogs_CL
+| where TimeGenerated > ago(24h)
+| extend LogData = parse_json(Log_s)
+| where isnotempty(LogData.workflow_id) and LogData.operation in ("start_workflow", "state_transition")
+| summarize
+    StartTime = min(TimeGenerated),
+    EndTime = max(TimeGenerated),
+    InitialState = take_anyif(tostring(LogData.current_state), LogData.operation == "start_workflow"),
+    FinalState = take_anyif(tostring(LogData.target_state), LogData.target_state in ("COMPLETED", "FAILED", "ESCALATED")),
+    MaxRevision = max(toint(LogData.workflow_revision))
+    by WorkflowId = tostring(LogData.workflow_id)
+| extend TotalDurationSec = datetime_diff('second', EndTime, StartTime)
+| where TotalDurationSec > 30 or FinalState == ""
+| project WorkflowId, InitialState, FinalState, MaxRevision, TotalDurationSec, StartTime, EndTime
+| order by TotalDurationSec desc
+
+// ----------------------------------------------------------------------------
+// 6. ADAPTER EXECUTION DURATIONS & FAILURE RATES (Phases 7–12)
+// Evaluates individual adapter performance across DocIntel, Forensics, Compliance, Risk, Audit, Report
+// ----------------------------------------------------------------------------
+ContainerAppConsoleLogs_CL
+| where TimeGenerated > ago(12h)
+| extend LogData = parse_json(Log_s)
+| where LogData.operation in ("adapter_completed", "audit_chain_sealed", "report_generated") or LogData.component in ("doc_intel_adapter", "forensic_adapter", "compliance_adapter", "risk_adapter", "audit_adapter", "report_adapter")
+| summarize
+    TotalRuns = count(),
+    Failures = countif(LogData.outcome == "FAILED" or LogData.outcome == "ADAPTER_FAILURE"),
+    AvgDurationMs = avg(todouble(LogData.duration_ms)),
+    MaxDurationMs = max(todouble(LogData.duration_ms))
+    by Adapter = coalesce(tostring(LogData.adapter), tostring(LogData.component))
+| order by TotalRuns desc
+
+// ----------------------------------------------------------------------------
+// 7. EXECUTION CLAIM CONFLICTS (Worker Contention)
+// Tracks lease collisions where multiple workers contend for the same event key
+// ----------------------------------------------------------------------------
+ContainerAppConsoleLogs_CL
+| where TimeGenerated > ago(24h)
+| extend LogData = parse_json(Log_s)
+| where LogData.outcome == "CLAIM_CONFLICT" or LogData.error_category == "CLAIM_CONFLICT"
+| project
+    TimeGenerated,
+    WorkflowId = tostring(LogData.workflow_id),
+    ClaimId = tostring(LogData.claim_id),
+    ErrorDetails = tostring(LogData.error_details),
+    Message = tostring(LogData.message)
+| order by TimeGenerated desc
+
+// ----------------------------------------------------------------------------
+// 8. IDEMPOTENCY DEDUPLICATION HITS
+// Verifies duplicate events were safely detected and ignored
+// ----------------------------------------------------------------------------
+ContainerAppConsoleLogs_CL
+| where TimeGenerated > ago(24h)
+| extend LogData = parse_json(Log_s)
+| where LogData.outcome in ("SKIPPED_DUPLICATE", "DROPPED_STALE") or LogData.operation == "idempotency_check"
+| project
+    TimeGenerated,
+    WorkflowId = tostring(LogData.workflow_id),
+    IdempotencyKey = tostring(LogData.idempotency_key),
+    Outcome = tostring(LogData.outcome),
+    Message = tostring(LogData.message)
+| order by TimeGenerated desc
+
+// ----------------------------------------------------------------------------
+// 9. RECENT COMPLETED WORKFLOW AUDIT
+// Lists successful workflows with PDF report IDs and cryptographic seal hashes
+// ----------------------------------------------------------------------------
+ContainerAppConsoleLogs_CL
+| where TimeGenerated > ago(24h)
+| extend LogData = parse_json(Log_s)
+| where LogData.target_state == "COMPLETED" or LogData.operation == "report_generated"
+| summarize
+    CompletedAt = max(TimeGenerated),
+    FinalRevision = max(toint(LogData.workflow_revision)),
+    ReportId = take_anyif(tostring(LogData.report_id), isnotempty(LogData.report_id))
+    by WorkflowId = tostring(LogData.workflow_id)
+| order by CompletedAt desc
