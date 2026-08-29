@@ -38,7 +38,7 @@ async def start_pipeline(
     try:
         w_id = req.workflow_id or f"wf-{uuid.uuid4().hex[:8]}"
         workflow, _ = orchestrator.start_workflow(workflow_id=w_id, document_id=req.document_id)
-        revision = state_manager.get_workflow_revision(w_id)
+        revision = workflow.workflow_revision
         return {
             "workflow_id": workflow.workflow_id,
             "document_id": workflow.document_id,
