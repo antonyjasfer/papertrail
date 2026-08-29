@@ -129,6 +129,22 @@ class ReportAdapter(BaseEngineAdapter):
                 evidence_bundle=evidence_bundle,
             )
 
+            from app.core.config import settings
+            if getattr(settings, "papertrail_cloud_provider", "gcp") == "azure" and gen_result.pdf_bytes:
+                try:
+                    from app.infrastructure.azure.blob_storage import AzureBlobStorageProvider
+                    storage = AzureBlobStorageProvider()
+                    object_path = f"reports/{document_id}/{gen_result.report_id}.pdf"
+                    storage.upload_bytes(
+                        bucket_or_container=settings.azure_blob_container_reports,
+                        object_path=object_path,
+                        data=gen_result.pdf_bytes,
+                        content_type="application/pdf",
+                    )
+                    logger.info(f"[{self.adapter_name}] Uploaded report PDF to {settings.azure_blob_container_reports}/{object_path}")
+                except Exception as upload_err:
+                    logger.warning(f"[{self.adapter_name}] Non-fatal report upload notice: {upload_err}")
+
             return AdapterResult(
                 success=True,
                 output_reference={

@@ -59,6 +59,17 @@ class AuditAdapter(BaseEngineAdapter):
                 previous_event_hash=genesis_evt.event_hash,
             )
 
+            from app.core.config import settings
+            if getattr(settings, "papertrail_cloud_provider", "gcp") == "azure":
+                try:
+                    from app.infrastructure.azure.cosmos_repositories import CosmosAuditEventRepository
+                    repo = CosmosAuditEventRepository()
+                    repo.append(genesis_evt)
+                    repo.append(sealed_evt)
+                    logger.info(f"[{self.adapter_name}] Persisted audit events to Cosmos DB")
+                except Exception as persist_err:
+                    logger.warning(f"[{self.adapter_name}] Non-fatal audit event persistence notice: {persist_err}")
+
             return AdapterResult(
                 success=True,
                 output_reference={
