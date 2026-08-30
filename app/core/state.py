@@ -165,6 +165,12 @@ class AnalysisWorkflow(BaseModel):
         and sets optional exceptional reasons. On failure, raises StateTransitionError
         without mutating state, created_at, or updated_at.
         """
+        if target_state == self.current_state and self.current_state not in TERMINAL_STATES:
+            self.updated_at = datetime.now(timezone.utc)
+            if reason:
+                self.failure_reason = reason
+            return self.current_state
+
         validated_target = validate_transition(self.current_state, target_state)
 
         # Mutate state on valid transition
