@@ -41,18 +41,27 @@ class DocumentIntelligenceAgent:
         if self._client is None:
             api_key = settings.gemini_api_key
             if not api_key:
-                # Attempt retrieval from Secret Manager fallback if configured
-                secret_client = gcp_foundation.get_secret_manager_client()
-                if secret_client:
+                if settings.papertrail_cloud_provider == "azure" or settings.azure_keyvault_url:
                     try:
-                        secret_name = (
-                            f"projects/{settings.gcp_project_id}/secrets/{settings.secret_name_gemini_api_key}/versions/latest"
-                        )
-                        response = secret_client.access_secret_version(request={"name": secret_name})
-                        api_key = response.payload.data.decode("utf-8").strip()
-                        logger.info("Successfully fetched Gemini API key from Secret Manager")
-                    except Exception as err:
-                        logger.warning("Secret Manager key retrieval attempt failed: %s", err)
+                        from app.infrastructure.azure.key_vault_provider import AzureKeyVaultSecretProvider
+                        kv = AzureKeyVaultSecretProvider()
+                        api_key = kv.get_secret("gemini-api-key")
+                        logger.info("Successfully fetched Gemini API key from Azure Key Vault")
+                    except Exception as kv_err:
+                        logger.warning("Azure Key Vault key retrieval attempt failed: %s", kv_err)
+                else:
+                    # Attempt retrieval from Secret Manager fallback if configured
+                    secret_client = gcp_foundation.get_secret_manager_client()
+                    if secret_client:
+                        try:
+                            secret_name = (
+                                f"projects/{settings.gcp_project_id}/secrets/{settings.secret_name_gemini_api_key}/versions/latest"
+                            )
+                            response = secret_client.access_secret_version(request={"name": secret_name})
+                            api_key = response.payload.data.decode("utf-8").strip()
+                            logger.info("Successfully fetched Gemini API key from Secret Manager")
+                        except Exception as err:
+                            logger.warning("Secret Manager key retrieval attempt failed: %s", err)
 
             try:
                 if api_key:
