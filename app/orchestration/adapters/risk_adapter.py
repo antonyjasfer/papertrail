@@ -48,12 +48,25 @@ class RiskAdapter(BaseEngineAdapter):
             try:
                 ref_dt = datetime(2026, 8, 18, 12, 0, 0, tzinfo=timezone.utc)
                 risk_context = RiskContext(reference_datetime=ref_dt)
-                extraction_payload = GeminiExtractionPayload(
+                extraction_dict = payload.get("extraction")
+                if not extraction_dict and isinstance(payload.get("previous_output"), dict):
+                    extraction_dict = payload["previous_output"].get("extraction")
+
+                extraction_payload = GeminiExtractionPayload(**extraction_dict) if extraction_dict else GeminiExtractionPayload(
                     document_type="invoice",
-                    vendor_name="Standard Vendor",
+                    vendor="Standard Vendor",
+                    customer="Standard Customer",
                     invoice_number="INV-1001",
                     dates=["2026-01-15"],
                     amounts=["1000.00"],
+                    line_items=[
+                        LineItem(
+                            description="Standard Item",
+                            quantity="1",
+                            unit_price="1000.00",
+                            amount="1000.00",
+                        )
+                    ],
                     extraction_confidence=0.95,
                 )
                 extraction_result = DocumentExtractionResult(
@@ -71,11 +84,29 @@ class RiskAdapter(BaseEngineAdapter):
                     checksum="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
                 )
 
+                forensic_dict = payload.get("forensic_result")
+                if not forensic_dict and isinstance(payload.get("previous_output"), dict):
+                    forensic_dict = payload["previous_output"].get("forensic_result")
+
+                forensic_result = None
+                if forensic_dict:
+                    from app.models.forensics import ForensicAnalysisResult
+                    forensic_result = ForensicAnalysisResult(**forensic_dict)
+
+                compliance_dict = payload.get("compliance_result")
+                if not compliance_dict and isinstance(payload.get("previous_output"), dict):
+                    compliance_dict = payload["previous_output"].get("compliance_result")
+
+                compliance_result = None
+                if compliance_dict:
+                    from app.models.compliance import ComplianceAnalysisResult
+                    compliance_result = ComplianceAnalysisResult(**compliance_dict)
+
                 result = self.engine.assess(
                     extraction_result=extraction_result,
                     metadata=doc_metadata,
-                    forensic_result=None,
-                    compliance_result=None,
+                    forensic_result=forensic_result,
+                    compliance_result=compliance_result,
                     context=risk_context,
                 )
 

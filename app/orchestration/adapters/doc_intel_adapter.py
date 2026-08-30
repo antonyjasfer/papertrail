@@ -4,7 +4,12 @@ from typing import Any, Dict, Optional
 
 from app.core.errors import ErrorCategory
 from app.core.logging import CorrelationContext, log_event
-from app.models.analysis import AnalysisStatus, DocumentExtractionResult, GeminiExtractionPayload
+from app.models.analysis import (
+    AnalysisStatus,
+    DocumentExtractionResult,
+    GeminiExtractionPayload,
+    LineItem,
+)
 from app.orchestration.adapters.base import (
     AdapterResult,
     BaseEngineAdapter,
@@ -90,10 +95,19 @@ class DocIntelAdapter(BaseEngineAdapter):
                 else:
                     mock_extraction = GeminiExtractionPayload(
                         document_type="invoice",
-                        vendor_name="Standard Vendor",
+                        vendor="Standard Vendor",
+                        customer="Standard Customer",
                         invoice_number="INV-1001",
                         dates=["2026-01-15"],
                         amounts=["1000.00"],
+                        line_items=[
+                            LineItem(
+                                description="Standard Item",
+                                quantity="1",
+                                unit_price="1000.00",
+                                amount="1000.00",
+                            )
+                        ],
                         extraction_confidence=0.95,
                     )
                     log_event(
@@ -130,10 +144,19 @@ class DocIntelAdapter(BaseEngineAdapter):
                 )
                 mock_extraction = GeminiExtractionPayload(
                     document_type="invoice",
-                    vendor_name="Standard Vendor",
+                    vendor="Standard Vendor",
+                    customer="Standard Customer",
                     invoice_number="INV-1001",
                     dates=["2026-01-15"],
                     amounts=["1000.00"],
+                    line_items=[
+                        LineItem(
+                            description="Standard Item",
+                            quantity="1",
+                            unit_price="1000.00",
+                            amount="1000.00",
+                        )
+                    ],
                     extraction_confidence=0.95,
                 )
                 return AdapterResult(

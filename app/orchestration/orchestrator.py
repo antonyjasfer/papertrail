@@ -292,7 +292,12 @@ class WorkflowOrchestrator:
 
             # Step 7: Atomic Transaction commit
             output_ref = adapter_result.output_reference if adapter_result else None
-            next_payload = {"document_id": event.document_id, "previous_output": output_ref} if output_ref else {"document_id": event.document_id}
+            next_payload = dict(event.payload) if event.payload else {"document_id": event.document_id}
+            if output_ref:
+                next_payload["previous_output"] = output_ref
+                for k, v in output_ref.items():
+                    if k != "document_id":
+                        next_payload[k] = v
 
             updated_workflow, outbox_event = self.state_manager.commit_transaction(
                 workflow_id=workflow_id,

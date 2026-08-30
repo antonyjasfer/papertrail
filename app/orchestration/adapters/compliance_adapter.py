@@ -48,12 +48,25 @@ class ComplianceAdapter(BaseEngineAdapter):
             try:
                 ref_dt = datetime(2026, 8, 18, 12, 0, 0, tzinfo=timezone.utc)
                 comp_context = ComplianceContext(reference_datetime=ref_dt)
-                extraction_payload = GeminiExtractionPayload(
+                extraction_dict = payload.get("extraction")
+                if not extraction_dict and isinstance(payload.get("previous_output"), dict):
+                    extraction_dict = payload["previous_output"].get("extraction")
+
+                extraction_payload = GeminiExtractionPayload(**extraction_dict) if extraction_dict else GeminiExtractionPayload(
                     document_type="invoice",
-                    vendor_name="Standard Vendor",
+                    vendor="Standard Vendor",
+                    customer="Standard Customer",
                     invoice_number="INV-1001",
                     dates=["2026-01-15"],
                     amounts=["1000.00"],
+                    line_items=[
+                        LineItem(
+                            description="Standard Item",
+                            quantity="1",
+                            unit_price="1000.00",
+                            amount="1000.00",
+                        )
+                    ],
                     extraction_confidence=0.95,
                 )
                 extraction_result = DocumentExtractionResult(
@@ -71,10 +84,19 @@ class ComplianceAdapter(BaseEngineAdapter):
                     checksum="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
                 )
 
+                forensic_dict = payload.get("forensic_result")
+                if not forensic_dict and isinstance(payload.get("previous_output"), dict):
+                    forensic_dict = payload["previous_output"].get("forensic_result")
+
+                forensic_result = None
+                if forensic_dict:
+                    from app.models.forensics import ForensicAnalysisResult
+                    forensic_result = ForensicAnalysisResult(**forensic_dict)
+
                 result = self.engine.evaluate(
                     extraction_result=extraction_result,
                     metadata=doc_metadata,
-                    forensic_result=None,
+                    forensic_result=forensic_result,
                     context=comp_context,
                 )
 
@@ -91,29 +113,22 @@ class ComplianceAdapter(BaseEngineAdapter):
                         workflow_id=workflow_id,
                         document_id=document_id,
                         duration_ms=duration_ms,
-                        outcome="REQUIRES_REVIEW",
+                        outcome="FLAGGED",
                         finding_count=result.finding_count,
                     )
-                    return AdapterResult(
-                        success=False,
-                        failure_classification=FailureClassification.REQUIRES_REVIEW,
-                        failure_reason=f"Compliance evaluation contained failed findings: {result.evidence_summary}",
-                        output_reference={"compliance_result": result.model_dump(mode="json")},
-                        observations={"finding_count": result.finding_count},
+                else:
+                    log_event(
+                        logger=logger,
+                        level=logging.INFO,
+                        message=f"Compliance evaluation completed in {duration_ms:.2f}ms with {result.finding_count} finding(s)",
+                        component="compliance_adapter",
+                        operation="compliance_completed",
+                        workflow_id=workflow_id,
+                        document_id=document_id,
+                        duration_ms=duration_ms,
+                        outcome="SUCCESS",
+                        finding_count=result.finding_count,
                     )
-
-                log_event(
-                    logger=logger,
-                    level=logging.INFO,
-                    message=f"Compliance evaluation passed in {duration_ms:.2f}ms ({result.finding_count} findings)",
-                    component="compliance_adapter",
-                    operation="compliance_completed",
-                    workflow_id=workflow_id,
-                    document_id=document_id,
-                    duration_ms=duration_ms,
-                    outcome="SUCCESS",
-                    finding_count=result.finding_count,
-                )
 
                 return AdapterResult(
                     success=True,

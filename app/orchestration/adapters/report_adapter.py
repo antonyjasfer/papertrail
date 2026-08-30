@@ -62,19 +62,38 @@ class ReportAdapter(BaseEngineAdapter):
                     storage_object=f"documents/{document_id}.pdf",
                     checksum="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
                 )
+                extraction_dict = payload.get("extraction")
+                if not extraction_dict and isinstance(payload.get("previous_output"), dict):
+                    extraction_dict = payload["previous_output"].get("extraction")
+
+                extraction_payload = GeminiExtractionPayload(**extraction_dict) if extraction_dict else GeminiExtractionPayload(
+                    document_type="invoice",
+                    vendor="Acme Corp",
+                    customer="Standard Customer",
+                    invoice_number="INV-2026-001",
+                    dates=["2026-01-15"],
+                    amounts=["1000.00"],
+                    line_items=[
+                        LineItem(
+                            description="Standard Item",
+                            quantity="1",
+                            unit_price="1000.00",
+                            amount="1000.00",
+                        )
+                    ],
+                    extraction_confidence=0.95,
+                )
                 extraction_res = DocumentExtractionResult(
-                    extraction=GeminiExtractionPayload(
-                        document_type="invoice",
-                        vendor_name="Acme Corp",
-                        invoice_number="INV-2026-001",
-                        dates=["2026-01-15"],
-                        amounts=["1000.00"],
-                        extraction_confidence=0.95,
-                    ),
+                    extraction=extraction_payload,
                     status=AnalysisStatus.SUCCESS,
                     status_reason="Extraction valid",
                 )
-                forensic_res = ForensicAnalysisResult(
+
+                forensic_dict = payload.get("forensic_result")
+                if not forensic_dict and isinstance(payload.get("previous_output"), dict):
+                    forensic_dict = payload["previous_output"].get("forensic_result")
+
+                forensic_res = ForensicAnalysisResult(**forensic_dict) if forensic_dict else ForensicAnalysisResult(
                     document_id=document_id,
                     findings=[],
                     finding_count=0,
@@ -82,7 +101,12 @@ class ReportAdapter(BaseEngineAdapter):
                     checks_skipped=[],
                     evidence_summary="No forensic anomalies detected.",
                 )
-                compliance_res = ComplianceAnalysisResult(
+
+                compliance_dict = payload.get("compliance_result")
+                if not compliance_dict and isinstance(payload.get("previous_output"), dict):
+                    compliance_dict = payload["previous_output"].get("compliance_result")
+
+                compliance_res = ComplianceAnalysisResult(**compliance_dict) if compliance_dict else ComplianceAnalysisResult(
                     document_id=document_id,
                     findings=[],
                     finding_count=0,
@@ -92,7 +116,12 @@ class ReportAdapter(BaseEngineAdapter):
                     policies_evaluated=["Standard Policy"],
                     evidence_summary="Fully compliant.",
                 )
-                risk_res = RiskAssessmentResult(
+
+                risk_dict = payload.get("risk_result")
+                if not risk_dict and isinstance(payload.get("previous_output"), dict):
+                    risk_dict = payload["previous_output"].get("risk_result")
+
+                risk_res = RiskAssessmentResult(**risk_dict) if risk_dict else RiskAssessmentResult(
                     document_id=document_id,
                     composite_score=Decimal("15.00"),
                     risk_level=RiskLevel.LOW,

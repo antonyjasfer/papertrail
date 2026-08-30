@@ -44,13 +44,25 @@ class ForensicAdapter(BaseEngineAdapter):
                 document_id=document_id,
             )
             try:
-                extraction_dict = payload.get("extraction", {})
+                extraction_dict = payload.get("extraction")
+                if not extraction_dict and isinstance(payload.get("previous_output"), dict):
+                    extraction_dict = payload["previous_output"].get("extraction")
+                
                 extraction_payload = GeminiExtractionPayload(**extraction_dict) if extraction_dict else GeminiExtractionPayload(
                     document_type="invoice",
-                    vendor_name="Standard Vendor",
+                    vendor="Standard Vendor",
+                    customer="Standard Customer",
                     invoice_number="INV-1001",
                     dates=["2026-01-15"],
                     amounts=["1000.00"],
+                    line_items=[
+                        LineItem(
+                            description="Standard Item",
+                            quantity="1",
+                            unit_price="1000.00",
+                            amount="1000.00",
+                        )
+                    ],
                     extraction_confidence=0.95,
                 )
                 extraction_result = DocumentExtractionResult(
