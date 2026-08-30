@@ -140,3 +140,29 @@ async def resume_pipeline(
             detail=f"Failed to resume pipeline: {err}",
         )
 
+
+@router.get("/{workflow_id}/diagnostics")
+async def get_workflow_diagnostics(
+    workflow_id: str,
+    threshold_seconds: int = 300,
+    state_manager: IWorkflowStateManager = Depends(get_workflow_state_manager),
+) -> Dict[str, Any]:
+    """Retrieve operational diagnostics and check if a specific workflow is stalled/stuck."""
+    from app.orchestration.diagnostics import check_workflow_stuck
+    workflow = state_manager.get_workflow(workflow_id)
+    if not workflow:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Workflow '{workflow_id}' not found.",
+        )
+    stuck_report = check_workflow_stuck(workflow, threshold_seconds=threshold_seconds)
+    revision = state_manager.get_workflow_revision(workflow_id)
+    return {
+        "workflow_id": workflow.workflow_id,
+        "document_id": workflow.document_id,
+        "current_state": workflow.current_state.value,
+        "workflow_revision": revision,
+        "is_stuck": stuck_report is not None,
+        "diagnostic_report": stuck_report.to_dict() if stuck_report else None,
+    }
+
