@@ -9,7 +9,12 @@ from app.core.errors import ErrorCategory
 from app.core.logging import CorrelationContext, log_event
 from app.core.metrics import record_report_generation
 from app.forensics.engine import ForensicAnalysisResult
-from app.models.analysis import AnalysisStatus, DocumentExtractionResult, GeminiExtractionPayload
+from app.models.analysis import (
+    AnalysisStatus,
+    DocumentExtractionResult,
+    GeminiExtractionPayload,
+    LineItem,
+)
 from app.models.compliance import ComplianceAnalysisResult
 from app.models.document import DocumentMetadata
 from app.models.risk import RiskAssessmentResult, RiskLevel

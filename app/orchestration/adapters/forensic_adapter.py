@@ -2,11 +2,19 @@ import logging
 import time
 from typing import Any, Dict, Optional
 
+from app.core.contracts.repositories import IDocumentRepository
 from app.core.errors import ErrorCategory
 from app.core.logging import CorrelationContext, log_event
 from app.forensics.engine import ForensicEngine
-from app.models.analysis import AnalysisStatus, DocumentExtractionResult, GeminiExtractionPayload
+from app.infrastructure.factory import get_document_repository
+from app.models.analysis import (
+    AnalysisStatus,
+    DocumentExtractionResult,
+    GeminiExtractionPayload,
+    LineItem,
+)
 from app.models.document import DocumentMetadata
+from app.models.forensics import HistoricalContext
 from app.orchestration.adapters.base import (
     AdapterResult,
     BaseEngineAdapter,
@@ -19,8 +27,13 @@ logger = logging.getLogger("papertrail.orchestration.forensic_adapter")
 class ForensicAdapter(BaseEngineAdapter):
     """Adapter wrapping Phase 8 Deterministic Forensic Engine."""
 
-    def __init__(self, engine: Optional[ForensicEngine] = None) -> None:
+    def __init__(
+        self,
+        engine: Optional[ForensicEngine] = None,
+        document_repository: Optional[IDocumentRepository] = None,
+    ) -> None:
         self.engine = engine or ForensicEngine()
+        self._document_repository = document_repository
 
     @property
     def adapter_name(self) -> str:
@@ -70,19 +83,60 @@ class ForensicAdapter(BaseEngineAdapter):
                     status=AnalysisStatus.SUCCESS,
                     status_reason="Extraction ready for forensics",
                 )
-                doc_metadata = DocumentMetadata(
-                    document_id=document_id,
-                    filename="document.pdf",
-                    content_type="application/pdf",
-                    size_bytes=1024,
-                    storage_bucket="papertrail-ai-documents-dev",
-                    storage_object=f"documents/{document_id}.pdf",
-                    checksum="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-                )
 
+                # 1. Resolve active DocumentRepository
+                doc_repo = self._document_repository
+                if doc_repo is None:
+                    try:
+                        doc_repo = get_document_repository()
+                    except Exception:
+                        doc_repo = None
+
+                # 2. Retrieve real DocumentMetadata (with accurate SHA-256 checksum)
+                doc_metadata = None
+                if doc_repo is not None:
+                    try:
+                        doc_metadata = doc_repo.get(document_id)
+                    except Exception as err:
+                        logger.debug("Could not fetch document metadata from repo for '%s': %s", document_id, err)
+
+                if doc_metadata is None:
+                    meta_dict = payload.get("metadata")
+                    if meta_dict and isinstance(meta_dict, dict):
+                        doc_metadata = DocumentMetadata(**meta_dict)
+                    else:
+                        doc_metadata = DocumentMetadata(
+                            document_id=document_id,
+                            filename="document.pdf",
+                            content_type="application/pdf",
+                            size_bytes=1024,
+                            storage_bucket="papertrail-ai-documents-dev",
+                            storage_object=f"documents/{document_id}.pdf",
+                            checksum="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                        )
+
+                # 3. Retrieve HistoricalContext with strict self-exclusion
+                historical_context = None
+                if doc_repo is not None and hasattr(doc_repo, "get_historical_context"):
+                    try:
+                        historical_context = doc_repo.get_historical_context(
+                            exclude_document_id=document_id,
+                            exclude_workflow_id=workflow_id,
+                        )
+                    except Exception as err:
+                        logger.warning("Could not fetch historical context for '%s': %s", document_id, err)
+
+                if historical_context is None and "historical_context" in payload and payload["historical_context"]:
+                    try:
+                        historical_context = HistoricalContext(**payload["historical_context"])
+                    except Exception:
+                        pass
+
+                # 4. Execute deterministic forensic analysis
                 result = self.engine.analyze(
                     extraction_result=extraction_result,
                     metadata=doc_metadata,
+                    historical_context=historical_context,
                 )
 
                 duration_ms = (time.perf_counter() - t0) * 1000.0

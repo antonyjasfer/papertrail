@@ -3,6 +3,7 @@ from typing import List, Optional, Protocol, runtime_checkable
 from app.audit.models import AuditEvent, AuditEventType
 from app.core.state import AnalysisWorkflow
 from app.models.document import DocumentMetadata
+from app.models.forensics import HistoricalContext
 
 
 @runtime_checkable
@@ -35,6 +36,10 @@ class IDocumentRepository(Protocol):
     def update(self, metadata: DocumentMetadata) -> DocumentMetadata: ...
 
     def delete(self, document_id: str) -> bool: ...
+
+    def get_historical_context(
+        self, exclude_document_id: str, exclude_workflow_id: Optional[str] = None
+    ) -> HistoricalContext: ...
 
 
 @runtime_checkable

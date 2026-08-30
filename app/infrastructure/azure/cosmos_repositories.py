@@ -34,6 +34,7 @@ from app.database.repositories.workflow_repository import (
 )
 from app.infrastructure.azure.foundation import azure_foundation
 from app.models.document import DocumentMetadata, DocumentStatus
+from app.models.forensics import HistoricalContext
 
 logger = logging.getLogger("papertrail.azure.cosmos_repositories")
 
@@ -224,6 +225,69 @@ class CosmosDocumentRepository:
                 raise DocumentPersistenceError("delete", document_id, str(err)) from err
         self._items.pop(document_id, None)
         return True
+
+    def get_historical_context(
+        self, exclude_document_id: str, exclude_workflow_id: Optional[str] = None
+    ) -> HistoricalContext:
+        """Query historical document checksums and extracted invoice numbers, strictly excluding current document/workflow."""
+        existing_checksums = set()
+        existing_invoice_numbers = set()
+
+        if self.container is not None:
+            try:
+                doc_query = (
+                    "SELECT c.checksum FROM c WHERE c.type = 'DOCUMENT' AND c.document_id != @doc_id"
+                )
+                doc_items = self.container.query_items(
+                    query=doc_query,
+                    parameters=[{"name": "@doc_id", "value": exclude_document_id}],
+                    enable_cross_partition_query=True,
+                )
+                for item in doc_items:
+                    chk = item.get("checksum")
+                    if chk:
+                        existing_checksums.add(str(chk).strip())
+            except Exception as err:
+                logger.warning("Error querying historical document checksums from Cosmos: %s", err)
+
+            try:
+                cosmos = azure_foundation.get_cosmos_client()
+                if cosmos is not None:
+                    db = cosmos.get_database_client(settings.azure_cosmos_database)
+                    wf_container = db.get_container_client(settings.azure_cosmos_container_workflow_state)
+                    wf_query = (
+                        "SELECT c.output_reference.extraction.invoice_number AS inv_num, c.workflow_id, c.document_id "
+                        "FROM c WHERE c.type = 'EXECUTION_CLAIM' AND IS_DEFINED(c.output_reference.extraction.invoice_number)"
+                    )
+                    claims = wf_container.query_items(
+                        query=wf_query,
+                        enable_cross_partition_query=True,
+                    )
+                    for c in claims:
+                        w_id = c.get("workflow_id")
+                        d_id = c.get("document_id")
+                        inv = c.get("inv_num")
+                        if exclude_workflow_id and w_id == exclude_workflow_id:
+                            continue
+                        if exclude_document_id and d_id == exclude_document_id:
+                            continue
+                        if inv:
+                            existing_invoice_numbers.add(str(inv).strip())
+            except Exception as err:
+                logger.warning("Error querying historical extraction claims from Cosmos: %s", err)
+
+        # In-memory shared items fallback (for tests/mock)
+        for d_id, item in self._items.items():
+            if d_id == exclude_document_id:
+                continue
+            chk = item.get("checksum")
+            if chk:
+                existing_checksums.add(str(chk).strip())
+
+        return HistoricalContext(
+            existing_invoice_numbers=sorted(list(existing_invoice_numbers)),
+            existing_checksums=sorted(list(existing_checksums)),
+        )
 
 
 class CosmosAuditEventRepository:

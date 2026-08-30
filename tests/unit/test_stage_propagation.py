@@ -38,7 +38,7 @@ def anomalous_extraction_dict():
         ],
         "vendor": "SuperStore",
         "customer": "Charlotte Melton",
-        "invoice_number": "27583",
+        "invoice_number": "INV-PROP-27583",
         "description": "Order ID : ID-2012-CM1219097-41065",
         "extraction_confidence": 0.98,
     }
@@ -114,7 +114,7 @@ def test_risk_adapter_incorporates_anomaly_and_flags_high_risk(anomalous_extract
     assert "risk_result" in r_res.output_reference
     risk_data = r_res.output_reference["risk_result"]
     assert risk_data["risk_level"] == "HIGH"
-    assert Decimal(str(risk_data["composite_score"])) == Decimal("53.18")
+    assert Decimal(str(risk_data["composite_score"])) == Decimal("52.30")
     assert risk_data["review_recommended"] is True
 
 

@@ -5,7 +5,12 @@ from typing import Any, Dict, Optional
 
 from app.core.errors import ErrorCategory
 from app.core.logging import CorrelationContext, log_event
-from app.models.analysis import AnalysisStatus, DocumentExtractionResult, GeminiExtractionPayload
+from app.models.analysis import (
+    AnalysisStatus,
+    DocumentExtractionResult,
+    GeminiExtractionPayload,
+    LineItem,
+)
 from app.models.document import DocumentMetadata
 from app.models.risk import RiskContext
 from app.orchestration.adapters.base import (

@@ -4,6 +4,7 @@ from typing import Any, Dict, Optional
 
 from app.core.gcp import gcp_foundation
 from app.models.document import DocumentMetadata, DocumentStatus
+from app.models.forensics import HistoricalContext
 
 logger = logging.getLogger("papertrail.database.document_repository")
 
@@ -195,3 +196,45 @@ class DocumentRepository:
             return True
         except Exception as err:
             raise DocumentPersistenceError("delete", document_id, str(err)) from err
+
+    def get_historical_context(
+        self, exclude_document_id: str, exclude_workflow_id: Optional[str] = None
+    ) -> HistoricalContext:
+        """Query historical document checksums and extracted invoice numbers from Firestore, excluding current document."""
+        existing_checksums = set()
+        existing_invoice_numbers = set()
+
+        try:
+            client = self.client
+            if client is not None:
+                docs = client.collection(self.COLLECTION_NAME).stream()
+                for doc in docs:
+                    data = doc.to_dict()
+                    if data.get("document_id") == exclude_document_id or doc.id == exclude_document_id:
+                        continue
+                    chk = data.get("checksum")
+                    if chk:
+                        existing_checksums.add(str(chk).strip())
+
+                try:
+                    wf_docs = client.collection("workflows").stream()
+                    for w in wf_docs:
+                        if exclude_workflow_id and w.id == exclude_workflow_id:
+                            continue
+                        w_data = w.to_dict()
+                        if w_data.get("document_id") == exclude_document_id:
+                            continue
+                        out_ref = w_data.get("output_reference", {})
+                        if isinstance(out_ref, dict):
+                            ext = out_ref.get("extraction", {})
+                            if isinstance(ext, dict) and ext.get("invoice_number"):
+                                existing_invoice_numbers.add(str(ext["invoice_number"]).strip())
+                except Exception as err:
+                    logger.warning("Error querying historical workflow extractions from Firestore: %s", err)
+        except Exception as err:
+            logger.warning("Error querying historical documents from Firestore: %s", err)
+
+        return HistoricalContext(
+            existing_invoice_numbers=sorted(list(existing_invoice_numbers)),
+            existing_checksums=sorted(list(existing_checksums)),
+        )
