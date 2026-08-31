@@ -49,8 +49,19 @@ class Settings(BaseSettings):
     # Optional Gemini Key (Fallback to Secret Manager or Mock in Dev)
     gemini_api_key: Optional[str] = None
 
-    # Frontend CORS Origin (secure, no wildcard)
-    frontend_origin: str = "http://localhost:5173"
+    # Frontend CORS Origins (comma-separated, secure explicit origins only, no wildcard)
+    frontend_origins: str = "http://localhost:5173,https://frontend-gamma-wine-23.vercel.app"
+    frontend_origin: Optional[str] = None
+
+    @property
+    def cors_origins(self) -> list[str]:
+        """Parse comma-separated origins and ensure unique explicit origin list."""
+        origins: list[str] = []
+        if self.frontend_origins:
+            origins.extend([o.strip() for o in self.frontend_origins.split(",") if o.strip()])
+        if self.frontend_origin and self.frontend_origin.strip() not in origins:
+            origins.append(self.frontend_origin.strip())
+        return origins or ["http://localhost:5173"]
 
     # Multi-Cloud Provider Selection ('gcp' | 'azure' | 'mock')
     papertrail_cloud_provider: str = "gcp"

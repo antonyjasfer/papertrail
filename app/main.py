@@ -27,10 +27,10 @@ app = FastAPI(
 # Attach Observability Middleware
 app.add_middleware(ObservabilityMiddleware)
 
-# Attach secure CORS Middleware (frontend origin only, no wildcard)
+# Attach secure CORS Middleware (explicit origins only, no wildcard)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_origin],
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
