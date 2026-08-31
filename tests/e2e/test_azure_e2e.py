@@ -5,11 +5,57 @@ from app.infrastructure.azure.cosmos_state_manager import CosmosStateManager
 from app.orchestration.orchestrator import STAGE_TRANSITION_MAP, WorkflowOrchestrator
 
 
+from unittest.mock import MagicMock
+from datetime import datetime, timezone
+from app.models.analysis import GeminiExtractionPayload, LineItem
+from app.models.document import DocumentMetadata
+from app.services.document_intelligence import DocumentIntelligenceService
+from app.orchestration.adapters.doc_intel_adapter import DocIntelAdapter
+
+
 @pytest.mark.e2e
 def test_azure_e2e_pipeline_execution():
     """Verify full end-to-end pipeline execution on Azure CosmosStateManager."""
     sm = CosmosStateManager()
     orchestrator = WorkflowOrchestrator(state_manager=sm)
+
+    mock_agent = MagicMock()
+    mock_agent.extract_document_payload.return_value = GeminiExtractionPayload(
+        document_type="invoice",
+        vendor="Acme Corp",
+        customer="Standard Customer",
+        invoice_number="INV-AZ-100",
+        dates=["2026-01-15"],
+        amounts=["1000.00"],
+        line_items=[
+            LineItem(
+                description="Standard Item",
+                quantity="1",
+                unit_price="1000.00",
+                amount="1000.00",
+            )
+        ],
+        extraction_confidence=0.95,
+    )
+    mock_storage = MagicMock()
+    mock_storage.get_document_metadata.return_value = DocumentMetadata(
+        document_id="doc-e2e-1",
+        filename="invoice.pdf",
+        content_type="application/pdf",
+        size_bytes=1024,
+        storage_bucket="papertrail-documents",
+        storage_object="invoices/doc-e2e-1.pdf",
+        created_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(timezone.utc),
+        checksum="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    )
+    mock_storage.get_document_bytes.return_value = b"%PDF-1.4 sample content"
+
+    doc_service = DocumentIntelligenceService(storage_service=mock_storage, agent=mock_agent)
+    doc_adapter = DocIntelAdapter(doc_service=doc_service)
+
+    orchestrator.adapters[WorkflowState.INGESTING] = doc_adapter
+    orchestrator.adapters[WorkflowState.EXTRACTING] = doc_adapter
 
     workflow_id = "wf-e2e-azure-1"
     document_id = "doc-e2e-1"

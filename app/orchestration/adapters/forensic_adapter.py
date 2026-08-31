@@ -62,26 +62,19 @@ class ForensicAdapter(BaseEngineAdapter):
                     extraction_dict = payload["previous_output"].get("extraction")
                 
                 extraction_payload = GeminiExtractionPayload(**extraction_dict) if extraction_dict else GeminiExtractionPayload(
-                    document_type="invoice",
-                    vendor="Standard Vendor",
-                    customer="Standard Customer",
-                    invoice_number="INV-1001",
-                    dates=["2026-01-15"],
-                    amounts=["1000.00"],
-                    line_items=[
-                        LineItem(
-                            description="Standard Item",
-                            quantity="1",
-                            unit_price="1000.00",
-                            amount="1000.00",
-                        )
-                    ],
-                    extraction_confidence=0.95,
+                    document_type="unknown",
+                    vendor=None,
+                    customer=None,
+                    invoice_number=None,
+                    dates=[],
+                    amounts=[],
+                    line_items=[],
+                    extraction_confidence=0.0,
                 )
                 extraction_result = DocumentExtractionResult(
                     extraction=extraction_payload,
-                    status=AnalysisStatus.SUCCESS,
-                    status_reason="Extraction ready for forensics",
+                    status=AnalysisStatus.SUCCESS if extraction_dict else AnalysisStatus.FAILED,
+                    status_reason="Extraction ready for forensics" if extraction_dict else "No extraction payload provided",
                 )
 
                 # 1. Resolve active DocumentRepository
@@ -96,7 +89,9 @@ class ForensicAdapter(BaseEngineAdapter):
                 doc_metadata = None
                 if doc_repo is not None:
                     try:
-                        doc_metadata = doc_repo.get(document_id)
+                        fetched_meta = doc_repo.get(document_id)
+                        if isinstance(fetched_meta, DocumentMetadata):
+                            doc_metadata = fetched_meta
                     except Exception as err:
                         logger.debug("Could not fetch document metadata from repo for '%s': %s", document_id, err)
 

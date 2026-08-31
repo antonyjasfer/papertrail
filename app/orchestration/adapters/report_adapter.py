@@ -72,26 +72,19 @@ class ReportAdapter(BaseEngineAdapter):
                     extraction_dict = payload["previous_output"].get("extraction")
 
                 extraction_payload = GeminiExtractionPayload(**extraction_dict) if extraction_dict else GeminiExtractionPayload(
-                    document_type="invoice",
-                    vendor="Acme Corp",
-                    customer="Standard Customer",
-                    invoice_number="INV-2026-001",
-                    dates=["2026-01-15"],
-                    amounts=["1000.00"],
-                    line_items=[
-                        LineItem(
-                            description="Standard Item",
-                            quantity="1",
-                            unit_price="1000.00",
-                            amount="1000.00",
-                        )
-                    ],
-                    extraction_confidence=0.95,
+                    document_type="unknown",
+                    vendor=None,
+                    customer=None,
+                    invoice_number=None,
+                    dates=[],
+                    amounts=[],
+                    line_items=[],
+                    extraction_confidence=0.0,
                 )
                 extraction_res = DocumentExtractionResult(
                     extraction=extraction_payload,
-                    status=AnalysisStatus.SUCCESS,
-                    status_reason="Extraction valid",
+                    status=AnalysisStatus.SUCCESS if extraction_dict else AnalysisStatus.FAILED,
+                    status_reason="Extraction valid" if extraction_dict else "No extraction payload provided",
                 )
 
                 forensic_dict = payload.get("forensic_result")

@@ -58,26 +58,19 @@ class RiskAdapter(BaseEngineAdapter):
                     extraction_dict = payload["previous_output"].get("extraction")
 
                 extraction_payload = GeminiExtractionPayload(**extraction_dict) if extraction_dict else GeminiExtractionPayload(
-                    document_type="invoice",
-                    vendor="Standard Vendor",
-                    customer="Standard Customer",
-                    invoice_number="INV-1001",
-                    dates=["2026-01-15"],
-                    amounts=["1000.00"],
-                    line_items=[
-                        LineItem(
-                            description="Standard Item",
-                            quantity="1",
-                            unit_price="1000.00",
-                            amount="1000.00",
-                        )
-                    ],
-                    extraction_confidence=0.95,
+                    document_type="unknown",
+                    vendor=None,
+                    customer=None,
+                    invoice_number=None,
+                    dates=[],
+                    amounts=[],
+                    line_items=[],
+                    extraction_confidence=0.0,
                 )
                 extraction_result = DocumentExtractionResult(
                     extraction=extraction_payload,
-                    status=AnalysisStatus.SUCCESS,
-                    status_reason="Extraction ready for risk assessment",
+                    status=AnalysisStatus.SUCCESS if extraction_dict else AnalysisStatus.FAILED,
+                    status_reason="Extraction ready for risk assessment" if extraction_dict else "No extraction payload provided",
                 )
                 doc_metadata = DocumentMetadata(
                     document_id=document_id,

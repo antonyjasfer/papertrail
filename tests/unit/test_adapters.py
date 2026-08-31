@@ -31,7 +31,29 @@ def test_compliance_adapter():
 
 def test_risk_adapter():
     adapter = RiskAdapter()
-    result = adapter.execute("wf-4", "doc-4", {})
+    result = adapter.execute(
+        "wf-4",
+        "doc-4",
+        {
+            "extraction": {
+                "document_type": "invoice",
+                "vendor": "SuperStore",
+                "customer": "Standard Customer",
+                "invoice_number": "INV-100",
+                "dates": ["2026-01-15"],
+                "amounts": ["1000.00"],
+                "line_items": [
+                    {
+                        "description": "Standard Item",
+                        "quantity": "1",
+                        "unit_price": "1000.00",
+                        "amount": "1000.00",
+                    }
+                ],
+                "extraction_confidence": 0.95,
+            }
+        },
+    )
     assert result.success is True
     assert "risk_result" in result.output_reference
 

@@ -93,78 +93,67 @@ class DocIntelAdapter(BaseEngineAdapter):
                         observations={"confidence": result.extraction.extraction_confidence if result.extraction else 0.0},
                     )
                 else:
-                    mock_extraction = GeminiExtractionPayload(
-                        document_type="invoice",
-                        vendor="Standard Vendor",
-                        customer="Standard Customer",
-                        invoice_number="INV-1001",
-                        dates=["2026-01-15"],
-                        amounts=["1000.00"],
-                        line_items=[
-                            LineItem(
-                                description="Standard Item",
-                                quantity="1",
-                                unit_price="1000.00",
-                                amount="1000.00",
-                            )
-                        ],
-                        extraction_confidence=0.95,
+                    err_msg = (result.status_reason or "").lower()
+                    is_transient = any(
+                        term in err_msg
+                        for term in ("timeout", "rate limit", "429", "503", "resource_exhausted", "quota")
+                    )
+                    failure_classification = (
+                        FailureClassification.RETRYABLE if is_transient else FailureClassification.NON_RETRYABLE
                     )
                     log_event(
                         logger=logger,
-                        level=logging.INFO,
-                        message=f"Fallback extraction applied for test/dev mode ({result.status_reason})",
+                        level=logging.ERROR,
+                        message=f"Document extraction failed ({result.status_reason})",
                         component="doc_intel_adapter",
-                        operation="fallback_extraction",
+                        operation="extraction_failed",
                         workflow_id=workflow_id,
                         document_id=document_id,
-                        outcome="FALLBACK_SUCCESS",
+                        duration_ms=duration_ms,
+                        outcome="EXTRACTION_FAILED",
+                        error_category=ErrorCategory.TRANSIENT_DEPENDENCY_ERROR.value if is_transient else ErrorCategory.PERMANENT_PROCESSING_ERROR.value,
                     )
                     return AdapterResult(
-                        success=True,
+                        success=False,
+                        failure_classification=failure_classification,
+                        failure_reason=result.status_reason or "Document extraction failed.",
                         output_reference={
                             "document_id": document_id,
-                            "extraction": mock_extraction.model_dump(mode="json"),
-                            "status_reason": f"Fallback extraction for test/dev mode ({result.status_reason})",
+                            "extraction": None,
+                            "status_reason": result.status_reason,
                         },
-                        observations={"confidence": 0.95},
+                        observations={"confidence": 0.0},
                     )
             except Exception as e:
                 duration_ms = (time.perf_counter() - t0) * 1000.0
+                err_msg = str(e).lower()
+                is_transient = any(
+                    term in err_msg
+                    for term in ("timeout", "rate limit", "429", "503", "resource_exhausted", "quota", "connection", "unavailable")
+                )
+                failure_classification = (
+                    FailureClassification.RETRYABLE if is_transient else FailureClassification.NON_RETRYABLE
+                )
                 log_event(
                     logger=logger,
-                    level=logging.WARNING,
-                    message=f"Storage/Service unavailable ({e}). Defaulting to mock extraction result for local execution.",
+                    level=logging.ERROR,
+                    message=f"Exception during document extraction: {e}",
                     component="doc_intel_adapter",
-                    operation="fallback_on_exception",
+                    operation="extraction_exception",
                     workflow_id=workflow_id,
                     document_id=document_id,
                     duration_ms=duration_ms,
                     error_details=str(e),
-                )
-                mock_extraction = GeminiExtractionPayload(
-                    document_type="invoice",
-                    vendor="Standard Vendor",
-                    customer="Standard Customer",
-                    invoice_number="INV-1001",
-                    dates=["2026-01-15"],
-                    amounts=["1000.00"],
-                    line_items=[
-                        LineItem(
-                            description="Standard Item",
-                            quantity="1",
-                            unit_price="1000.00",
-                            amount="1000.00",
-                        )
-                    ],
-                    extraction_confidence=0.95,
+                    error_category=ErrorCategory.TRANSIENT_DEPENDENCY_ERROR.value if is_transient else ErrorCategory.PERMANENT_PROCESSING_ERROR.value,
                 )
                 return AdapterResult(
-                    success=True,
+                    success=False,
+                    failure_classification=failure_classification,
+                    failure_reason=f"Document extraction error: {e}",
                     output_reference={
                         "document_id": document_id,
-                        "extraction": mock_extraction.model_dump(mode="json"),
-                        "status_reason": f"Fallback extraction upon exception ({e})",
+                        "extraction": None,
+                        "status_reason": str(e),
                     },
-                    observations={"confidence": 0.95},
+                    observations={"confidence": 0.0},
                 )
