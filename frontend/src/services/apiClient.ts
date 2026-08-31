@@ -7,10 +7,13 @@ import type {
   WorkflowStatus,
 } from '../types/api';
 
+const DEFAULT_PROD_API = 'https://papertrail-api.gentlesmoke-4100f438.centralindia.azurecontainerapps.io';
+const DEFAULT_DEV_API = 'http://127.0.0.1:8080';
+
 const API_BASE =
   import.meta.env.VITE_API_BASE_URL ||
   import.meta.env.VITE_API_BASE ||
-  'http://127.0.0.1:8080';
+  (import.meta.env.PROD ? DEFAULT_PROD_API : DEFAULT_DEV_API);
 
 export class ApiError extends Error {
   status: number;
