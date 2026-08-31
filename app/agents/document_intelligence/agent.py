@@ -164,7 +164,8 @@ class DocumentIntelligenceAgent:
                         f"Gemini API error during extraction: {err}", is_transient=is_transient
                     ) from err
 
-                time.sleep(1.0 * attempts)  # Backoff delay for transient retry
+                backoff_delay = 5.0 * attempts if ("429" in err_msg or "rate limit" in err_msg) else 1.0 * attempts
+                time.sleep(backoff_delay)  # Backoff delay for transient retry
 
         raise DocumentIntelligenceAgentError(
             f"Extraction failed after {attempts} attempts: {last_exception}", is_transient=True

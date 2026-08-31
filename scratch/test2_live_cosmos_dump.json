@@ -1,0 +1,2977 @@
+[
+  {
+    "id": "wf:wf-test2-live-doc-4068cf2507d5",
+    "type": "WORKFLOW",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "document_id": "doc-4068cf2507d5",
+    "current_state": "REQUIRES_REVIEW",
+    "workflow_revision": 8,
+    "created_at": "2026-08-30T20:19:08.351039+00:00",
+    "updated_at": "2026-08-30T20:19:34.144075+00:00",
+    "failure_reason": null,
+    "escalation_reason": null,
+    "review_reason": "Risk assessment score (53.18) indicates HIGH/CRITICAL risk.",
+    "_etag": "\"240072bd-0000-2000-0000-6a9490560000\"",
+    "_rid": "kolcAIgkW6SBAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SBAwAAAAAAAA==/",
+    "_attachments": "attachments/",
+    "_ts": 1788121174
+  },
+  {
+    "id": "outbox:evt-init-wf-test2-live-doc-4068cf2507d5",
+    "type": "OUTBOX",
+    "outbox_id": "evt-init-wf-test2-live-doc-4068cf2507d5",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "document_id": "doc-4068cf2507d5",
+    "event_id": "evt-init-wf-test2-live-doc-4068cf2507d5",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:1:DOCUMENT_UPLOADED",
+    "event_type": "DOCUMENT_UPLOADED",
+    "workflow_revision": 1,
+    "payload_hash": "a01c54203a2eb419e6f793373a968b7cd2174357929176abb08e9276ed8785d5",
+    "payload": {
+      "document_id": "doc-4068cf2507d5"
+    },
+    "status": "PENDING",
+    "created_at": "2026-08-30T20:19:08.351039+00:00",
+    "attempts": 0,
+    "_rid": "kolcAIgkW6SCAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SCAwAAAAAAAA==/",
+    "_etag": "\"240042bd-0000-2000-0000-6a94903c0000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121148
+  },
+  {
+    "id": "claim:1a4521ae9aa3a255",
+    "type": "EXECUTION_CLAIM",
+    "claim_id": "claim:1a4521ae9aa3a255",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-1a4521ae9aa3a255",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:1:DOCUMENT_UPLOADED",
+    "payload_hash": "",
+    "owner_id": "worker-1",
+    "status": "COMPLETED",
+    "claimed_at": "2026-08-30T20:19:10.719313+00:00",
+    "lease_expires_at": "2026-08-30T20:24:10.719313+00:00",
+    "_etag": "\"240049bd-0000-2000-0000-6a94903e0000\"",
+    "output_reference": null,
+    "_rid": "kolcAIgkW6SDAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SDAwAAAAAAAA==/",
+    "_attachments": "attachments/",
+    "_ts": 1788121150
+  },
+  {
+    "id": "idemp:1a4521ae9aa3a255",
+    "type": "IDEMPOTENCY",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-1a4521ae9aa3a255",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:1:DOCUMENT_UPLOADED",
+    "payload_hash": "",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "workflow_revision": 1,
+    "output_reference": null,
+    "processed_at": "2026-08-30T20:19:10.759384+00:00",
+    "_rid": "kolcAIgkW6SEAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SEAwAAAAAAAA==/",
+    "_etag": "\"24004abd-0000-2000-0000-6a94903e0000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121150
+  },
+  {
+    "id": "outbox:evt-wf-test2-live-doc-4068cf2507d5-rev2",
+    "type": "OUTBOX",
+    "outbox_id": "evt-wf-test2-live-doc-4068cf2507d5-rev2",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "document_id": "doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-rev2",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:2:INGESTION_COMPLETED",
+    "event_type": "INGESTION_COMPLETED",
+    "workflow_revision": 2,
+    "payload_hash": "a01c54203a2eb419e6f793373a968b7cd2174357929176abb08e9276ed8785d5",
+    "payload": {
+      "document_id": "doc-4068cf2507d5"
+    },
+    "status": "PENDING",
+    "created_at": "2026-08-30T20:19:10.759384+00:00",
+    "attempts": 0,
+    "_rid": "kolcAIgkW6SFAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SFAwAAAAAAAA==/",
+    "_etag": "\"24004bbd-0000-2000-0000-6a94903e0000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121150
+  },
+  {
+    "id": "claim:5bbe7e6297997cf2",
+    "type": "EXECUTION_CLAIM",
+    "claim_id": "claim:5bbe7e6297997cf2",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-5bbe7e6297997cf2",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:2:INGESTION_COMPLETED",
+    "payload_hash": "",
+    "owner_id": "worker-1",
+    "status": "COMPLETED",
+    "claimed_at": "2026-08-30T20:19:11.922884+00:00",
+    "lease_expires_at": "2026-08-30T20:24:11.922884+00:00",
+    "_etag": "\"240052bd-0000-2000-0000-6a9490490000\"",
+    "output_reference": {
+      "document_id": "doc-4068cf2507d5",
+      "extraction": {
+        "document_type": "invoice",
+        "title": "INVOICE",
+        "entities": [
+          "SuperStore",
+          "Charlotte Melton",
+          "Gujranwala, Punjab, Pakistan"
+        ],
+        "dates": [
+          "2012-06-05"
+        ],
+        "amounts": [
+          "6,234.32",
+          "12,195.89",
+          "938.15",
+          "6,097.95",
+          "136.38"
+        ],
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+            "quantity": "13",
+            "unit_price": "938.15",
+            "amount": "12195.89"
+          }
+        ],
+        "vendor": "SuperStore",
+        "customer": "Charlotte Melton",
+        "invoice_number": "27583",
+        "description": "Order ID : ID-2012-CM1219097-41065",
+        "extraction_confidence": 0.98
+      },
+      "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70."
+    },
+    "_rid": "kolcAIgkW6SGAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SGAwAAAAAAAA==/",
+    "_attachments": "attachments/",
+    "_ts": 1788121161
+  },
+  {
+    "id": "idemp:5bbe7e6297997cf2",
+    "type": "IDEMPOTENCY",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-5bbe7e6297997cf2",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:2:INGESTION_COMPLETED",
+    "payload_hash": "",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "workflow_revision": 2,
+    "output_reference": {
+      "document_id": "doc-4068cf2507d5",
+      "extraction": {
+        "document_type": "invoice",
+        "title": "INVOICE",
+        "entities": [
+          "SuperStore",
+          "Charlotte Melton",
+          "Gujranwala, Punjab, Pakistan"
+        ],
+        "dates": [
+          "2012-06-05"
+        ],
+        "amounts": [
+          "6,234.32",
+          "12,195.89",
+          "938.15",
+          "6,097.95",
+          "136.38"
+        ],
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+            "quantity": "13",
+            "unit_price": "938.15",
+            "amount": "12195.89"
+          }
+        ],
+        "vendor": "SuperStore",
+        "customer": "Charlotte Melton",
+        "invoice_number": "27583",
+        "description": "Order ID : ID-2012-CM1219097-41065",
+        "extraction_confidence": 0.98
+      },
+      "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70."
+    },
+    "processed_at": "2026-08-30T20:19:21.286446+00:00",
+    "_rid": "kolcAIgkW6SHAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SHAwAAAAAAAA==/",
+    "_etag": "\"240053bd-0000-2000-0000-6a9490490000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121161
+  },
+  {
+    "id": "outbox:evt-wf-test2-live-doc-4068cf2507d5-rev3",
+    "type": "OUTBOX",
+    "outbox_id": "evt-wf-test2-live-doc-4068cf2507d5-rev3",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "document_id": "doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-rev3",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:3:EXTRACTION_COMPLETED",
+    "event_type": "EXTRACTION_COMPLETED",
+    "workflow_revision": 3,
+    "payload_hash": "6a0cb5979a96fd50a44f9eef1f2c268a112b5e8f4462121017b6c765a0e0a032",
+    "payload": {
+      "document_id": "doc-4068cf2507d5",
+      "previous_output": {
+        "document_id": "doc-4068cf2507d5",
+        "extraction": {
+          "document_type": "invoice",
+          "title": "INVOICE",
+          "entities": [
+            "SuperStore",
+            "Charlotte Melton",
+            "Gujranwala, Punjab, Pakistan"
+          ],
+          "dates": [
+            "2012-06-05"
+          ],
+          "amounts": [
+            "6,234.32",
+            "12,195.89",
+            "938.15",
+            "6,097.95",
+            "136.38"
+          ],
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+              "quantity": "13",
+              "unit_price": "938.15",
+              "amount": "12195.89"
+            }
+          ],
+          "vendor": "SuperStore",
+          "customer": "Charlotte Melton",
+          "invoice_number": "27583",
+          "description": "Order ID : ID-2012-CM1219097-41065",
+          "extraction_confidence": 0.98
+        },
+        "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70."
+      },
+      "extraction": {
+        "document_type": "invoice",
+        "title": "INVOICE",
+        "entities": [
+          "SuperStore",
+          "Charlotte Melton",
+          "Gujranwala, Punjab, Pakistan"
+        ],
+        "dates": [
+          "2012-06-05"
+        ],
+        "amounts": [
+          "6,234.32",
+          "12,195.89",
+          "938.15",
+          "6,097.95",
+          "136.38"
+        ],
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+            "quantity": "13",
+            "unit_price": "938.15",
+            "amount": "12195.89"
+          }
+        ],
+        "vendor": "SuperStore",
+        "customer": "Charlotte Melton",
+        "invoice_number": "27583",
+        "description": "Order ID : ID-2012-CM1219097-41065",
+        "extraction_confidence": 0.98
+      },
+      "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70."
+    },
+    "status": "PENDING",
+    "created_at": "2026-08-30T20:19:21.286446+00:00",
+    "attempts": 0,
+    "_rid": "kolcAIgkW6SIAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SIAwAAAAAAAA==/",
+    "_etag": "\"240054bd-0000-2000-0000-6a9490490000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121161
+  },
+  {
+    "id": "claim:36d1ded4a1c062df",
+    "type": "EXECUTION_CLAIM",
+    "claim_id": "claim:36d1ded4a1c062df",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-36d1ded4a1c062df",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:3:EXTRACTION_COMPLETED",
+    "payload_hash": "",
+    "owner_id": "worker-1",
+    "status": "COMPLETED",
+    "claimed_at": "2026-08-30T20:19:22.381327+00:00",
+    "lease_expires_at": "2026-08-30T20:24:22.381327+00:00",
+    "_etag": "\"24005dbd-0000-2000-0000-6a9490510000\"",
+    "output_reference": {
+      "document_id": "doc-4068cf2507d5",
+      "extraction": {
+        "document_type": "invoice",
+        "title": "INVOICE",
+        "entities": [
+          "SuperStore",
+          "Charlotte Melton",
+          "Gujranwala, Punjab, Pakistan"
+        ],
+        "dates": [
+          "2012-06-05"
+        ],
+        "amounts": [
+          "6,234.32",
+          "12,195.89",
+          "938.15",
+          "6,097.95",
+          "136.38"
+        ],
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+            "quantity": "13",
+            "unit_price": "938.15",
+            "amount": "12195.89"
+          }
+        ],
+        "vendor": "SuperStore",
+        "customer": "Charlotte Melton",
+        "invoice_number": "27583",
+        "description": "Order ID : ID-2012-CM1219097-41065",
+        "extraction_confidence": 0.98
+      },
+      "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70."
+    },
+    "_rid": "kolcAIgkW6SJAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SJAwAAAAAAAA==/",
+    "_attachments": "attachments/",
+    "_ts": 1788121169
+  },
+  {
+    "id": "idemp:36d1ded4a1c062df",
+    "type": "IDEMPOTENCY",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-36d1ded4a1c062df",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:3:EXTRACTION_COMPLETED",
+    "payload_hash": "",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "workflow_revision": 3,
+    "output_reference": {
+      "document_id": "doc-4068cf2507d5",
+      "extraction": {
+        "document_type": "invoice",
+        "title": "INVOICE",
+        "entities": [
+          "SuperStore",
+          "Charlotte Melton",
+          "Gujranwala, Punjab, Pakistan"
+        ],
+        "dates": [
+          "2012-06-05"
+        ],
+        "amounts": [
+          "6,234.32",
+          "12,195.89",
+          "938.15",
+          "6,097.95",
+          "136.38"
+        ],
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+            "quantity": "13",
+            "unit_price": "938.15",
+            "amount": "12195.89"
+          }
+        ],
+        "vendor": "SuperStore",
+        "customer": "Charlotte Melton",
+        "invoice_number": "27583",
+        "description": "Order ID : ID-2012-CM1219097-41065",
+        "extraction_confidence": 0.98
+      },
+      "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70."
+    },
+    "processed_at": "2026-08-30T20:19:29.622604+00:00",
+    "_rid": "kolcAIgkW6SKAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SKAwAAAAAAAA==/",
+    "_etag": "\"24005ebd-0000-2000-0000-6a9490510000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121169
+  },
+  {
+    "id": "outbox:evt-wf-test2-live-doc-4068cf2507d5-rev4",
+    "type": "OUTBOX",
+    "outbox_id": "evt-wf-test2-live-doc-4068cf2507d5-rev4",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "document_id": "doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-rev4",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:4:ANALYSIS_TRIGGERED",
+    "event_type": "ANALYSIS_TRIGGERED",
+    "workflow_revision": 4,
+    "payload_hash": "6a0cb5979a96fd50a44f9eef1f2c268a112b5e8f4462121017b6c765a0e0a032",
+    "payload": {
+      "document_id": "doc-4068cf2507d5",
+      "previous_output": {
+        "document_id": "doc-4068cf2507d5",
+        "extraction": {
+          "document_type": "invoice",
+          "title": "INVOICE",
+          "entities": [
+            "SuperStore",
+            "Charlotte Melton",
+            "Gujranwala, Punjab, Pakistan"
+          ],
+          "dates": [
+            "2012-06-05"
+          ],
+          "amounts": [
+            "6,234.32",
+            "12,195.89",
+            "938.15",
+            "6,097.95",
+            "136.38"
+          ],
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+              "quantity": "13",
+              "unit_price": "938.15",
+              "amount": "12195.89"
+            }
+          ],
+          "vendor": "SuperStore",
+          "customer": "Charlotte Melton",
+          "invoice_number": "27583",
+          "description": "Order ID : ID-2012-CM1219097-41065",
+          "extraction_confidence": 0.98
+        },
+        "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70."
+      },
+      "extraction": {
+        "document_type": "invoice",
+        "title": "INVOICE",
+        "entities": [
+          "SuperStore",
+          "Charlotte Melton",
+          "Gujranwala, Punjab, Pakistan"
+        ],
+        "dates": [
+          "2012-06-05"
+        ],
+        "amounts": [
+          "6,234.32",
+          "12,195.89",
+          "938.15",
+          "6,097.95",
+          "136.38"
+        ],
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+            "quantity": "13",
+            "unit_price": "938.15",
+            "amount": "12195.89"
+          }
+        ],
+        "vendor": "SuperStore",
+        "customer": "Charlotte Melton",
+        "invoice_number": "27583",
+        "description": "Order ID : ID-2012-CM1219097-41065",
+        "extraction_confidence": 0.98
+      },
+      "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70."
+    },
+    "status": "PENDING",
+    "created_at": "2026-08-30T20:19:29.622604+00:00",
+    "attempts": 0,
+    "_rid": "kolcAIgkW6SLAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SLAwAAAAAAAA==/",
+    "_etag": "\"24005fbd-0000-2000-0000-6a9490510000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121169
+  },
+  {
+    "id": "claim:665dd8a0951d779e",
+    "type": "EXECUTION_CLAIM",
+    "claim_id": "claim:665dd8a0951d779e",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-665dd8a0951d779e",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:4:ANALYSIS_TRIGGERED",
+    "payload_hash": "",
+    "owner_id": "worker-1",
+    "status": "COMPLETED",
+    "claimed_at": "2026-08-30T20:19:30.718801+00:00",
+    "lease_expires_at": "2026-08-30T20:24:30.718801+00:00",
+    "_etag": "\"240063bd-0000-2000-0000-6a9490520000\"",
+    "output_reference": null,
+    "_rid": "kolcAIgkW6SMAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SMAwAAAAAAAA==/",
+    "_attachments": "attachments/",
+    "_ts": 1788121170
+  },
+  {
+    "id": "idemp:665dd8a0951d779e",
+    "type": "IDEMPOTENCY",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-665dd8a0951d779e",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:4:ANALYSIS_TRIGGERED",
+    "payload_hash": "",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "workflow_revision": 4,
+    "output_reference": null,
+    "processed_at": "2026-08-30T20:19:30.756902+00:00",
+    "_rid": "kolcAIgkW6SNAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SNAwAAAAAAAA==/",
+    "_etag": "\"240064bd-0000-2000-0000-6a9490520000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121170
+  },
+  {
+    "id": "outbox:evt-wf-test2-live-doc-4068cf2507d5-rev5",
+    "type": "OUTBOX",
+    "outbox_id": "evt-wf-test2-live-doc-4068cf2507d5-rev5",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "document_id": "doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-rev5",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:5:FORENSICS_COMPLETED",
+    "event_type": "FORENSICS_COMPLETED",
+    "workflow_revision": 5,
+    "payload_hash": "6a0cb5979a96fd50a44f9eef1f2c268a112b5e8f4462121017b6c765a0e0a032",
+    "payload": {
+      "document_id": "doc-4068cf2507d5",
+      "previous_output": {
+        "document_id": "doc-4068cf2507d5",
+        "extraction": {
+          "document_type": "invoice",
+          "title": "INVOICE",
+          "entities": [
+            "SuperStore",
+            "Charlotte Melton",
+            "Gujranwala, Punjab, Pakistan"
+          ],
+          "dates": [
+            "2012-06-05"
+          ],
+          "amounts": [
+            "6,234.32",
+            "12,195.89",
+            "938.15",
+            "6,097.95",
+            "136.38"
+          ],
+          "currency": "USD",
+          "line_items": [
+            {
+              "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+              "quantity": "13",
+              "unit_price": "938.15",
+              "amount": "12195.89"
+            }
+          ],
+          "vendor": "SuperStore",
+          "customer": "Charlotte Melton",
+          "invoice_number": "27583",
+          "description": "Order ID : ID-2012-CM1219097-41065",
+          "extraction_confidence": 0.98
+        },
+        "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70."
+      },
+      "extraction": {
+        "document_type": "invoice",
+        "title": "INVOICE",
+        "entities": [
+          "SuperStore",
+          "Charlotte Melton",
+          "Gujranwala, Punjab, Pakistan"
+        ],
+        "dates": [
+          "2012-06-05"
+        ],
+        "amounts": [
+          "6,234.32",
+          "12,195.89",
+          "938.15",
+          "6,097.95",
+          "136.38"
+        ],
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+            "quantity": "13",
+            "unit_price": "938.15",
+            "amount": "12195.89"
+          }
+        ],
+        "vendor": "SuperStore",
+        "customer": "Charlotte Melton",
+        "invoice_number": "27583",
+        "description": "Order ID : ID-2012-CM1219097-41065",
+        "extraction_confidence": 0.98
+      },
+      "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70."
+    },
+    "status": "PENDING",
+    "created_at": "2026-08-30T20:19:30.756902+00:00",
+    "attempts": 0,
+    "_rid": "kolcAIgkW6SOAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SOAwAAAAAAAA==/",
+    "_etag": "\"240065bd-0000-2000-0000-6a9490520000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121170
+  },
+  {
+    "id": "claim:41709bc266c52f42",
+    "type": "EXECUTION_CLAIM",
+    "claim_id": "claim:41709bc266c52f42",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-41709bc266c52f42",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:5:FORENSICS_COMPLETED",
+    "payload_hash": "",
+    "owner_id": "worker-1",
+    "status": "COMPLETED",
+    "claimed_at": "2026-08-30T20:19:31.843000+00:00",
+    "lease_expires_at": "2026-08-30T20:24:31.843000+00:00",
+    "_etag": "\"240068bd-0000-2000-0000-6a9490530000\"",
+    "output_reference": {
+      "forensic_result": {
+        "document_id": "doc-4068cf2507d5",
+        "findings": [
+          {
+            "finding_code": "LINE_ITEM_AMOUNT_MISMATCH",
+            "category": "FINANCIAL",
+            "severity": "HIGH",
+            "title": "Line Item Amount Mismatch",
+            "description": "Line item 1 calculated amount (12195.95) does not match observed amount (12195.89).",
+            "evidence": {
+              "observed_value": "12195.89",
+              "expected_value": "12195.95",
+              "calculation": "13 * 938.15 = 12195.95 (quantized: 12195.95)",
+              "field_reference": "line_items[0].amount",
+              "context_notes": "Line item description: 'Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604'"
+            },
+            "rule_id": "LINE_ITEM_AMOUNT_MISMATCH",
+            "deterministic": true,
+            "requires_review": true
+          }
+        ],
+        "finding_count": 1,
+        "deterministic_checks_run": [
+          "LINE_ITEM_AMOUNT_MISMATCH: Line Item Amount Arithmetic Verification",
+          "FUTURE_DOCUMENT_DATE: Future Document Date Detection",
+          "INVALID_DATE_FORMAT: ISO Date Format Verification",
+          "DATE_ORDER_INVALID: Semantic Date Ordering Verification",
+          "MISSING_REQUIRED_FIELD: Missing Structural Field Verification",
+          "INVALID_DOCUMENT_METADATA: Metadata Consistency Verification",
+          "DUPLICATE_IDENTIFIER: Duplicate Identifier Verification"
+        ],
+        "checks_skipped": [
+          {
+            "rule_id": "DATE_ORDER_INVALID",
+            "reason": "Required semantic date ordering fields ('issue_date', 'due_date') are unavailable."
+          },
+          {
+            "rule_id": "DUPLICATE_IDENTIFIER",
+            "reason": "HistoricalContext parameter was not provided."
+          }
+        ],
+        "evidence_summary": "Forensic analysis completed. Identified 1 finding(s) (0 CRITICAL, 1 HIGH, 0 MEDIUM, 0 LOW). Executed 7 check(s), skipped 2 check(s)."
+      }
+    },
+    "_rid": "kolcAIgkW6SPAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SPAwAAAAAAAA==/",
+    "_attachments": "attachments/",
+    "_ts": 1788121171
+  },
+  {
+    "id": "idemp:41709bc266c52f42",
+    "type": "IDEMPOTENCY",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-41709bc266c52f42",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:5:FORENSICS_COMPLETED",
+    "payload_hash": "",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "workflow_revision": 5,
+    "output_reference": {
+      "forensic_result": {
+        "document_id": "doc-4068cf2507d5",
+        "findings": [
+          {
+            "finding_code": "LINE_ITEM_AMOUNT_MISMATCH",
+            "category": "FINANCIAL",
+            "severity": "HIGH",
+            "title": "Line Item Amount Mismatch",
+            "description": "Line item 1 calculated amount (12195.95) does not match observed amount (12195.89).",
+            "evidence": {
+              "observed_value": "12195.89",
+              "expected_value": "12195.95",
+              "calculation": "13 * 938.15 = 12195.95 (quantized: 12195.95)",
+              "field_reference": "line_items[0].amount",
+              "context_notes": "Line item description: 'Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604'"
+            },
+            "rule_id": "LINE_ITEM_AMOUNT_MISMATCH",
+            "deterministic": true,
+            "requires_review": true
+          }
+        ],
+        "finding_count": 1,
+        "deterministic_checks_run": [
+          "LINE_ITEM_AMOUNT_MISMATCH: Line Item Amount Arithmetic Verification",
+          "FUTURE_DOCUMENT_DATE: Future Document Date Detection",
+          "INVALID_DATE_FORMAT: ISO Date Format Verification",
+          "DATE_ORDER_INVALID: Semantic Date Ordering Verification",
+          "MISSING_REQUIRED_FIELD: Missing Structural Field Verification",
+          "INVALID_DOCUMENT_METADATA: Metadata Consistency Verification",
+          "DUPLICATE_IDENTIFIER: Duplicate Identifier Verification"
+        ],
+        "checks_skipped": [
+          {
+            "rule_id": "DATE_ORDER_INVALID",
+            "reason": "Required semantic date ordering fields ('issue_date', 'due_date') are unavailable."
+          },
+          {
+            "rule_id": "DUPLICATE_IDENTIFIER",
+            "reason": "HistoricalContext parameter was not provided."
+          }
+        ],
+        "evidence_summary": "Forensic analysis completed. Identified 1 finding(s) (0 CRITICAL, 1 HIGH, 0 MEDIUM, 0 LOW). Executed 7 check(s), skipped 2 check(s)."
+      }
+    },
+    "processed_at": "2026-08-30T20:19:31.891061+00:00",
+    "_rid": "kolcAIgkW6SQAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SQAwAAAAAAAA==/",
+    "_etag": "\"240069bd-0000-2000-0000-6a9490530000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121171
+  },
+  {
+    "id": "outbox:evt-wf-test2-live-doc-4068cf2507d5-rev6",
+    "type": "OUTBOX",
+    "outbox_id": "evt-wf-test2-live-doc-4068cf2507d5-rev6",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "document_id": "doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-rev6",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:6:COMPLIANCE_COMPLETED",
+    "event_type": "COMPLIANCE_COMPLETED",
+    "workflow_revision": 6,
+    "payload_hash": "d8fde64d55e7759b2e23fb83f2e7d6d9cd897c8ad080c3b62bf0e2ca7895e499",
+    "payload": {
+      "document_id": "doc-4068cf2507d5",
+      "previous_output": {
+        "forensic_result": {
+          "document_id": "doc-4068cf2507d5",
+          "findings": [
+            {
+              "finding_code": "LINE_ITEM_AMOUNT_MISMATCH",
+              "category": "FINANCIAL",
+              "severity": "HIGH",
+              "title": "Line Item Amount Mismatch",
+              "description": "Line item 1 calculated amount (12195.95) does not match observed amount (12195.89).",
+              "evidence": {
+                "observed_value": "12195.89",
+                "expected_value": "12195.95",
+                "calculation": "13 * 938.15 = 12195.95 (quantized: 12195.95)",
+                "field_reference": "line_items[0].amount",
+                "context_notes": "Line item description: 'Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604'"
+              },
+              "rule_id": "LINE_ITEM_AMOUNT_MISMATCH",
+              "deterministic": true,
+              "requires_review": true
+            }
+          ],
+          "finding_count": 1,
+          "deterministic_checks_run": [
+            "LINE_ITEM_AMOUNT_MISMATCH: Line Item Amount Arithmetic Verification",
+            "FUTURE_DOCUMENT_DATE: Future Document Date Detection",
+            "INVALID_DATE_FORMAT: ISO Date Format Verification",
+            "DATE_ORDER_INVALID: Semantic Date Ordering Verification",
+            "MISSING_REQUIRED_FIELD: Missing Structural Field Verification",
+            "INVALID_DOCUMENT_METADATA: Metadata Consistency Verification",
+            "DUPLICATE_IDENTIFIER: Duplicate Identifier Verification"
+          ],
+          "checks_skipped": [
+            {
+              "rule_id": "DATE_ORDER_INVALID",
+              "reason": "Required semantic date ordering fields ('issue_date', 'due_date') are unavailable."
+            },
+            {
+              "rule_id": "DUPLICATE_IDENTIFIER",
+              "reason": "HistoricalContext parameter was not provided."
+            }
+          ],
+          "evidence_summary": "Forensic analysis completed. Identified 1 finding(s) (0 CRITICAL, 1 HIGH, 0 MEDIUM, 0 LOW). Executed 7 check(s), skipped 2 check(s)."
+        }
+      },
+      "extraction": {
+        "document_type": "invoice",
+        "title": "INVOICE",
+        "entities": [
+          "SuperStore",
+          "Charlotte Melton",
+          "Gujranwala, Punjab, Pakistan"
+        ],
+        "dates": [
+          "2012-06-05"
+        ],
+        "amounts": [
+          "6,234.32",
+          "12,195.89",
+          "938.15",
+          "6,097.95",
+          "136.38"
+        ],
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+            "quantity": "13",
+            "unit_price": "938.15",
+            "amount": "12195.89"
+          }
+        ],
+        "vendor": "SuperStore",
+        "customer": "Charlotte Melton",
+        "invoice_number": "27583",
+        "description": "Order ID : ID-2012-CM1219097-41065",
+        "extraction_confidence": 0.98
+      },
+      "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70.",
+      "forensic_result": {
+        "document_id": "doc-4068cf2507d5",
+        "findings": [
+          {
+            "finding_code": "LINE_ITEM_AMOUNT_MISMATCH",
+            "category": "FINANCIAL",
+            "severity": "HIGH",
+            "title": "Line Item Amount Mismatch",
+            "description": "Line item 1 calculated amount (12195.95) does not match observed amount (12195.89).",
+            "evidence": {
+              "observed_value": "12195.89",
+              "expected_value": "12195.95",
+              "calculation": "13 * 938.15 = 12195.95 (quantized: 12195.95)",
+              "field_reference": "line_items[0].amount",
+              "context_notes": "Line item description: 'Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604'"
+            },
+            "rule_id": "LINE_ITEM_AMOUNT_MISMATCH",
+            "deterministic": true,
+            "requires_review": true
+          }
+        ],
+        "finding_count": 1,
+        "deterministic_checks_run": [
+          "LINE_ITEM_AMOUNT_MISMATCH: Line Item Amount Arithmetic Verification",
+          "FUTURE_DOCUMENT_DATE: Future Document Date Detection",
+          "INVALID_DATE_FORMAT: ISO Date Format Verification",
+          "DATE_ORDER_INVALID: Semantic Date Ordering Verification",
+          "MISSING_REQUIRED_FIELD: Missing Structural Field Verification",
+          "INVALID_DOCUMENT_METADATA: Metadata Consistency Verification",
+          "DUPLICATE_IDENTIFIER: Duplicate Identifier Verification"
+        ],
+        "checks_skipped": [
+          {
+            "rule_id": "DATE_ORDER_INVALID",
+            "reason": "Required semantic date ordering fields ('issue_date', 'due_date') are unavailable."
+          },
+          {
+            "rule_id": "DUPLICATE_IDENTIFIER",
+            "reason": "HistoricalContext parameter was not provided."
+          }
+        ],
+        "evidence_summary": "Forensic analysis completed. Identified 1 finding(s) (0 CRITICAL, 1 HIGH, 0 MEDIUM, 0 LOW). Executed 7 check(s), skipped 2 check(s)."
+      }
+    },
+    "status": "PENDING",
+    "created_at": "2026-08-30T20:19:31.891061+00:00",
+    "attempts": 0,
+    "_rid": "kolcAIgkW6SRAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SRAwAAAAAAAA==/",
+    "_etag": "\"24006abd-0000-2000-0000-6a9490530000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121171
+  },
+  {
+    "id": "claim:c9251f19d0349f10",
+    "type": "EXECUTION_CLAIM",
+    "claim_id": "claim:c9251f19d0349f10",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-c9251f19d0349f10",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:6:COMPLIANCE_COMPLETED",
+    "payload_hash": "",
+    "owner_id": "worker-1",
+    "status": "COMPLETED",
+    "claimed_at": "2026-08-30T20:19:32.975335+00:00",
+    "lease_expires_at": "2026-08-30T20:24:32.975335+00:00",
+    "_etag": "\"24006dbd-0000-2000-0000-6a9490550000\"",
+    "output_reference": {
+      "compliance_result": {
+        "document_id": "doc-4068cf2507d5",
+        "findings": [
+          {
+            "finding_id": "cmp-fnd-0001",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-FIN-001",
+            "rule_id": "CR-FIN-001",
+            "status": "FAIL",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-FIN-001",
+              "rule_reference": "CR-FIN-001",
+              "observed_value": "Forensic finding detected: Line Item Amount Mismatch (HIGH)",
+              "expected_condition": "Zero LINE_ITEM_AMOUNT_MISMATCH forensic findings",
+              "evaluation_result": "FAIL",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [
+                "LINE_ITEM_AMOUNT_MISMATCH"
+              ],
+              "context_notes": "Line item 1 calculated amount (12195.95) does not match observed amount (12195.89)."
+            },
+            "description": "Compliance failed due to forensic arithmetic discrepancy: Line item 1 calculated amount (12195.95) does not match observed amount (12195.89).",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0002",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-FIN-002",
+            "rule_id": "CR-FIN-002",
+            "status": "INSUFFICIENT_EVIDENCE",
+            "evidence": {
+              "policy_reference": "POL-FIN-002 v1.0.0",
+              "control_reference": "C-FIN-002",
+              "rule_reference": "CR-FIN-002",
+              "observed_value": "Forensic duplicate check skipped: HistoricalContext parameter was not provided.",
+              "expected_condition": "HistoricalContext provided for duplicate verification",
+              "evaluation_result": "INSUFFICIENT_EVIDENCE",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": "HistoricalContext parameter was not provided."
+            },
+            "description": "Insufficient evidence for duplicate verification: HistoricalContext parameter was not provided.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0003",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-STR-001",
+            "rule_id": "CR-STR-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-STR-001",
+              "rule_reference": "CR-STR-001",
+              "observed_value": "All required fields present",
+              "expected_condition": "All structural required fields present",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Structural required fields present and verified.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0004",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-TMP-001",
+            "rule_id": "CR-TMP-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-TMP-001",
+              "rule_reference": "CR-TMP-001",
+              "observed_value": "All document dates valid",
+              "expected_condition": "Document date <= reference_datetime (2026-08-18T12:00:00+00:00)",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Document temporal dates verified valid.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0005",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-MET-001",
+            "rule_id": "CR-MET-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-MET-001",
+              "rule_reference": "CR-MET-001",
+              "observed_value": "DocumentMetadata valid",
+              "expected_condition": "Valid DocumentMetadata (non-zero size, valid checksum)",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Document metadata integrity verified.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0006",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-MET-001",
+            "rule_id": "CR-PRV-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-MET-001",
+              "rule_reference": "CR-PRV-001",
+              "observed_value": "SHA-256: e3b0c44298fc1c14...",
+              "expected_condition": "Valid SHA-256 hex string",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 5",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Cryptographic checksum provenance verified.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0007",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-EXT-001",
+            "rule_id": "CR-EXT-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-EXT-001",
+              "rule_reference": "CR-EXT-001",
+              "observed_value": "confidence=0.98",
+              "expected_condition": "confidence >= 0.70",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 7",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Extraction confidence meets quality threshold.",
+            "deterministic": true
+          }
+        ],
+        "finding_count": 7,
+        "policy_summaries": [
+          {
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "controls_evaluated": 6,
+            "controls_passed": 4,
+            "controls_failed": 1,
+            "controls_review": 0,
+            "controls_not_applicable": 0,
+            "controls_insufficient_evidence": 1
+          }
+        ],
+        "checks_run": [
+          "POL-FIN-001:C-FIN-001:CR-FIN-001",
+          "POL-FIN-001:C-FIN-002:CR-FIN-002",
+          "POL-FIN-001:C-STR-001:CR-STR-001",
+          "POL-FIN-001:C-TMP-001:CR-TMP-001",
+          "POL-FIN-001:C-MET-001:CR-MET-001",
+          "POL-FIN-001:C-MET-001:CR-PRV-001",
+          "POL-FIN-001:C-EXT-001:CR-EXT-001"
+        ],
+        "checks_skipped": [],
+        "policies_evaluated": [
+          "POL-FIN-001 v1.0.0"
+        ],
+        "evidence_summary": "Compliance evaluation completed for document 'doc-4068cf2507d5'. Evaluated 1 policy/policies across 7 check(s). Control Results: 4 PASSED, 1 FAILED, 1 INSUFFICIENT_EVIDENCE."
+      }
+    },
+    "_rid": "kolcAIgkW6SSAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SSAwAAAAAAAA==/",
+    "_attachments": "attachments/",
+    "_ts": 1788121173
+  },
+  {
+    "id": "idemp:c9251f19d0349f10",
+    "type": "IDEMPOTENCY",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-c9251f19d0349f10",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:6:COMPLIANCE_COMPLETED",
+    "payload_hash": "",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "workflow_revision": 6,
+    "output_reference": {
+      "compliance_result": {
+        "document_id": "doc-4068cf2507d5",
+        "findings": [
+          {
+            "finding_id": "cmp-fnd-0001",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-FIN-001",
+            "rule_id": "CR-FIN-001",
+            "status": "FAIL",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-FIN-001",
+              "rule_reference": "CR-FIN-001",
+              "observed_value": "Forensic finding detected: Line Item Amount Mismatch (HIGH)",
+              "expected_condition": "Zero LINE_ITEM_AMOUNT_MISMATCH forensic findings",
+              "evaluation_result": "FAIL",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [
+                "LINE_ITEM_AMOUNT_MISMATCH"
+              ],
+              "context_notes": "Line item 1 calculated amount (12195.95) does not match observed amount (12195.89)."
+            },
+            "description": "Compliance failed due to forensic arithmetic discrepancy: Line item 1 calculated amount (12195.95) does not match observed amount (12195.89).",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0002",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-FIN-002",
+            "rule_id": "CR-FIN-002",
+            "status": "INSUFFICIENT_EVIDENCE",
+            "evidence": {
+              "policy_reference": "POL-FIN-002 v1.0.0",
+              "control_reference": "C-FIN-002",
+              "rule_reference": "CR-FIN-002",
+              "observed_value": "Forensic duplicate check skipped: HistoricalContext parameter was not provided.",
+              "expected_condition": "HistoricalContext provided for duplicate verification",
+              "evaluation_result": "INSUFFICIENT_EVIDENCE",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": "HistoricalContext parameter was not provided."
+            },
+            "description": "Insufficient evidence for duplicate verification: HistoricalContext parameter was not provided.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0003",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-STR-001",
+            "rule_id": "CR-STR-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-STR-001",
+              "rule_reference": "CR-STR-001",
+              "observed_value": "All required fields present",
+              "expected_condition": "All structural required fields present",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Structural required fields present and verified.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0004",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-TMP-001",
+            "rule_id": "CR-TMP-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-TMP-001",
+              "rule_reference": "CR-TMP-001",
+              "observed_value": "All document dates valid",
+              "expected_condition": "Document date <= reference_datetime (2026-08-18T12:00:00+00:00)",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Document temporal dates verified valid.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0005",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-MET-001",
+            "rule_id": "CR-MET-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-MET-001",
+              "rule_reference": "CR-MET-001",
+              "observed_value": "DocumentMetadata valid",
+              "expected_condition": "Valid DocumentMetadata (non-zero size, valid checksum)",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Document metadata integrity verified.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0006",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-MET-001",
+            "rule_id": "CR-PRV-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-MET-001",
+              "rule_reference": "CR-PRV-001",
+              "observed_value": "SHA-256: e3b0c44298fc1c14...",
+              "expected_condition": "Valid SHA-256 hex string",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 5",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Cryptographic checksum provenance verified.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0007",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-EXT-001",
+            "rule_id": "CR-EXT-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-EXT-001",
+              "rule_reference": "CR-EXT-001",
+              "observed_value": "confidence=0.98",
+              "expected_condition": "confidence >= 0.70",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 7",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Extraction confidence meets quality threshold.",
+            "deterministic": true
+          }
+        ],
+        "finding_count": 7,
+        "policy_summaries": [
+          {
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "controls_evaluated": 6,
+            "controls_passed": 4,
+            "controls_failed": 1,
+            "controls_review": 0,
+            "controls_not_applicable": 0,
+            "controls_insufficient_evidence": 1
+          }
+        ],
+        "checks_run": [
+          "POL-FIN-001:C-FIN-001:CR-FIN-001",
+          "POL-FIN-001:C-FIN-002:CR-FIN-002",
+          "POL-FIN-001:C-STR-001:CR-STR-001",
+          "POL-FIN-001:C-TMP-001:CR-TMP-001",
+          "POL-FIN-001:C-MET-001:CR-MET-001",
+          "POL-FIN-001:C-MET-001:CR-PRV-001",
+          "POL-FIN-001:C-EXT-001:CR-EXT-001"
+        ],
+        "checks_skipped": [],
+        "policies_evaluated": [
+          "POL-FIN-001 v1.0.0"
+        ],
+        "evidence_summary": "Compliance evaluation completed for document 'doc-4068cf2507d5'. Evaluated 1 policy/policies across 7 check(s). Control Results: 4 PASSED, 1 FAILED, 1 INSUFFICIENT_EVIDENCE."
+      }
+    },
+    "processed_at": "2026-08-30T20:19:33.012698+00:00",
+    "_rid": "kolcAIgkW6STAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6STAwAAAAAAAA==/",
+    "_etag": "\"24006ebd-0000-2000-0000-6a9490550000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121173
+  },
+  {
+    "id": "outbox:evt-wf-test2-live-doc-4068cf2507d5-rev7",
+    "type": "OUTBOX",
+    "outbox_id": "evt-wf-test2-live-doc-4068cf2507d5-rev7",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "document_id": "doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-rev7",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:7:RISK_COMPLETED",
+    "event_type": "RISK_COMPLETED",
+    "workflow_revision": 7,
+    "payload_hash": "f79c361e08c41d433ceaea374d61c11e007b8b29217da77be2179ed8a16707d2",
+    "payload": {
+      "document_id": "doc-4068cf2507d5",
+      "previous_output": {
+        "compliance_result": {
+          "document_id": "doc-4068cf2507d5",
+          "findings": [
+            {
+              "finding_id": "cmp-fnd-0001",
+              "policy_id": "POL-FIN-001",
+              "policy_version": "1.0.0",
+              "control_id": "C-FIN-001",
+              "rule_id": "CR-FIN-001",
+              "status": "FAIL",
+              "evidence": {
+                "policy_reference": "POL-FIN-001 v1.0.0",
+                "control_reference": "C-FIN-001",
+                "rule_reference": "CR-FIN-001",
+                "observed_value": "Forensic finding detected: Line Item Amount Mismatch (HIGH)",
+                "expected_condition": "Zero LINE_ITEM_AMOUNT_MISMATCH forensic findings",
+                "evaluation_result": "FAIL",
+                "source_phase": "Phase 8",
+                "forensic_finding_codes": [
+                  "LINE_ITEM_AMOUNT_MISMATCH"
+                ],
+                "context_notes": "Line item 1 calculated amount (12195.95) does not match observed amount (12195.89)."
+              },
+              "description": "Compliance failed due to forensic arithmetic discrepancy: Line item 1 calculated amount (12195.95) does not match observed amount (12195.89).",
+              "deterministic": true
+            },
+            {
+              "finding_id": "cmp-fnd-0002",
+              "policy_id": "POL-FIN-001",
+              "policy_version": "1.0.0",
+              "control_id": "C-FIN-002",
+              "rule_id": "CR-FIN-002",
+              "status": "INSUFFICIENT_EVIDENCE",
+              "evidence": {
+                "policy_reference": "POL-FIN-002 v1.0.0",
+                "control_reference": "C-FIN-002",
+                "rule_reference": "CR-FIN-002",
+                "observed_value": "Forensic duplicate check skipped: HistoricalContext parameter was not provided.",
+                "expected_condition": "HistoricalContext provided for duplicate verification",
+                "evaluation_result": "INSUFFICIENT_EVIDENCE",
+                "source_phase": "Phase 8",
+                "forensic_finding_codes": [],
+                "context_notes": "HistoricalContext parameter was not provided."
+              },
+              "description": "Insufficient evidence for duplicate verification: HistoricalContext parameter was not provided.",
+              "deterministic": true
+            },
+            {
+              "finding_id": "cmp-fnd-0003",
+              "policy_id": "POL-FIN-001",
+              "policy_version": "1.0.0",
+              "control_id": "C-STR-001",
+              "rule_id": "CR-STR-001",
+              "status": "PASS",
+              "evidence": {
+                "policy_reference": "POL-FIN-001 v1.0.0",
+                "control_reference": "C-STR-001",
+                "rule_reference": "CR-STR-001",
+                "observed_value": "All required fields present",
+                "expected_condition": "All structural required fields present",
+                "evaluation_result": "PASS",
+                "source_phase": "Phase 8",
+                "forensic_finding_codes": [],
+                "context_notes": null
+              },
+              "description": "Structural required fields present and verified.",
+              "deterministic": true
+            },
+            {
+              "finding_id": "cmp-fnd-0004",
+              "policy_id": "POL-FIN-001",
+              "policy_version": "1.0.0",
+              "control_id": "C-TMP-001",
+              "rule_id": "CR-TMP-001",
+              "status": "PASS",
+              "evidence": {
+                "policy_reference": "POL-FIN-001 v1.0.0",
+                "control_reference": "C-TMP-001",
+                "rule_reference": "CR-TMP-001",
+                "observed_value": "All document dates valid",
+                "expected_condition": "Document date <= reference_datetime (2026-08-18T12:00:00+00:00)",
+                "evaluation_result": "PASS",
+                "source_phase": "Phase 8",
+                "forensic_finding_codes": [],
+                "context_notes": null
+              },
+              "description": "Document temporal dates verified valid.",
+              "deterministic": true
+            },
+            {
+              "finding_id": "cmp-fnd-0005",
+              "policy_id": "POL-FIN-001",
+              "policy_version": "1.0.0",
+              "control_id": "C-MET-001",
+              "rule_id": "CR-MET-001",
+              "status": "PASS",
+              "evidence": {
+                "policy_reference": "POL-FIN-001 v1.0.0",
+                "control_reference": "C-MET-001",
+                "rule_reference": "CR-MET-001",
+                "observed_value": "DocumentMetadata valid",
+                "expected_condition": "Valid DocumentMetadata (non-zero size, valid checksum)",
+                "evaluation_result": "PASS",
+                "source_phase": "Phase 8",
+                "forensic_finding_codes": [],
+                "context_notes": null
+              },
+              "description": "Document metadata integrity verified.",
+              "deterministic": true
+            },
+            {
+              "finding_id": "cmp-fnd-0006",
+              "policy_id": "POL-FIN-001",
+              "policy_version": "1.0.0",
+              "control_id": "C-MET-001",
+              "rule_id": "CR-PRV-001",
+              "status": "PASS",
+              "evidence": {
+                "policy_reference": "POL-FIN-001 v1.0.0",
+                "control_reference": "C-MET-001",
+                "rule_reference": "CR-PRV-001",
+                "observed_value": "SHA-256: e3b0c44298fc1c14...",
+                "expected_condition": "Valid SHA-256 hex string",
+                "evaluation_result": "PASS",
+                "source_phase": "Phase 5",
+                "forensic_finding_codes": [],
+                "context_notes": null
+              },
+              "description": "Cryptographic checksum provenance verified.",
+              "deterministic": true
+            },
+            {
+              "finding_id": "cmp-fnd-0007",
+              "policy_id": "POL-FIN-001",
+              "policy_version": "1.0.0",
+              "control_id": "C-EXT-001",
+              "rule_id": "CR-EXT-001",
+              "status": "PASS",
+              "evidence": {
+                "policy_reference": "POL-FIN-001 v1.0.0",
+                "control_reference": "C-EXT-001",
+                "rule_reference": "CR-EXT-001",
+                "observed_value": "confidence=0.98",
+                "expected_condition": "confidence >= 0.70",
+                "evaluation_result": "PASS",
+                "source_phase": "Phase 7",
+                "forensic_finding_codes": [],
+                "context_notes": null
+              },
+              "description": "Extraction confidence meets quality threshold.",
+              "deterministic": true
+            }
+          ],
+          "finding_count": 7,
+          "policy_summaries": [
+            {
+              "policy_id": "POL-FIN-001",
+              "policy_version": "1.0.0",
+              "controls_evaluated": 6,
+              "controls_passed": 4,
+              "controls_failed": 1,
+              "controls_review": 0,
+              "controls_not_applicable": 0,
+              "controls_insufficient_evidence": 1
+            }
+          ],
+          "checks_run": [
+            "POL-FIN-001:C-FIN-001:CR-FIN-001",
+            "POL-FIN-001:C-FIN-002:CR-FIN-002",
+            "POL-FIN-001:C-STR-001:CR-STR-001",
+            "POL-FIN-001:C-TMP-001:CR-TMP-001",
+            "POL-FIN-001:C-MET-001:CR-MET-001",
+            "POL-FIN-001:C-MET-001:CR-PRV-001",
+            "POL-FIN-001:C-EXT-001:CR-EXT-001"
+          ],
+          "checks_skipped": [],
+          "policies_evaluated": [
+            "POL-FIN-001 v1.0.0"
+          ],
+          "evidence_summary": "Compliance evaluation completed for document 'doc-4068cf2507d5'. Evaluated 1 policy/policies across 7 check(s). Control Results: 4 PASSED, 1 FAILED, 1 INSUFFICIENT_EVIDENCE."
+        }
+      },
+      "extraction": {
+        "document_type": "invoice",
+        "title": "INVOICE",
+        "entities": [
+          "SuperStore",
+          "Charlotte Melton",
+          "Gujranwala, Punjab, Pakistan"
+        ],
+        "dates": [
+          "2012-06-05"
+        ],
+        "amounts": [
+          "6,234.32",
+          "12,195.89",
+          "938.15",
+          "6,097.95",
+          "136.38"
+        ],
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+            "quantity": "13",
+            "unit_price": "938.15",
+            "amount": "12195.89"
+          }
+        ],
+        "vendor": "SuperStore",
+        "customer": "Charlotte Melton",
+        "invoice_number": "27583",
+        "description": "Order ID : ID-2012-CM1219097-41065",
+        "extraction_confidence": 0.98
+      },
+      "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70.",
+      "forensic_result": {
+        "document_id": "doc-4068cf2507d5",
+        "findings": [
+          {
+            "finding_code": "LINE_ITEM_AMOUNT_MISMATCH",
+            "category": "FINANCIAL",
+            "severity": "HIGH",
+            "title": "Line Item Amount Mismatch",
+            "description": "Line item 1 calculated amount (12195.95) does not match observed amount (12195.89).",
+            "evidence": {
+              "observed_value": "12195.89",
+              "expected_value": "12195.95",
+              "calculation": "13 * 938.15 = 12195.95 (quantized: 12195.95)",
+              "field_reference": "line_items[0].amount",
+              "context_notes": "Line item description: 'Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604'"
+            },
+            "rule_id": "LINE_ITEM_AMOUNT_MISMATCH",
+            "deterministic": true,
+            "requires_review": true
+          }
+        ],
+        "finding_count": 1,
+        "deterministic_checks_run": [
+          "LINE_ITEM_AMOUNT_MISMATCH: Line Item Amount Arithmetic Verification",
+          "FUTURE_DOCUMENT_DATE: Future Document Date Detection",
+          "INVALID_DATE_FORMAT: ISO Date Format Verification",
+          "DATE_ORDER_INVALID: Semantic Date Ordering Verification",
+          "MISSING_REQUIRED_FIELD: Missing Structural Field Verification",
+          "INVALID_DOCUMENT_METADATA: Metadata Consistency Verification",
+          "DUPLICATE_IDENTIFIER: Duplicate Identifier Verification"
+        ],
+        "checks_skipped": [
+          {
+            "rule_id": "DATE_ORDER_INVALID",
+            "reason": "Required semantic date ordering fields ('issue_date', 'due_date') are unavailable."
+          },
+          {
+            "rule_id": "DUPLICATE_IDENTIFIER",
+            "reason": "HistoricalContext parameter was not provided."
+          }
+        ],
+        "evidence_summary": "Forensic analysis completed. Identified 1 finding(s) (0 CRITICAL, 1 HIGH, 0 MEDIUM, 0 LOW). Executed 7 check(s), skipped 2 check(s)."
+      },
+      "compliance_result": {
+        "document_id": "doc-4068cf2507d5",
+        "findings": [
+          {
+            "finding_id": "cmp-fnd-0001",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-FIN-001",
+            "rule_id": "CR-FIN-001",
+            "status": "FAIL",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-FIN-001",
+              "rule_reference": "CR-FIN-001",
+              "observed_value": "Forensic finding detected: Line Item Amount Mismatch (HIGH)",
+              "expected_condition": "Zero LINE_ITEM_AMOUNT_MISMATCH forensic findings",
+              "evaluation_result": "FAIL",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [
+                "LINE_ITEM_AMOUNT_MISMATCH"
+              ],
+              "context_notes": "Line item 1 calculated amount (12195.95) does not match observed amount (12195.89)."
+            },
+            "description": "Compliance failed due to forensic arithmetic discrepancy: Line item 1 calculated amount (12195.95) does not match observed amount (12195.89).",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0002",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-FIN-002",
+            "rule_id": "CR-FIN-002",
+            "status": "INSUFFICIENT_EVIDENCE",
+            "evidence": {
+              "policy_reference": "POL-FIN-002 v1.0.0",
+              "control_reference": "C-FIN-002",
+              "rule_reference": "CR-FIN-002",
+              "observed_value": "Forensic duplicate check skipped: HistoricalContext parameter was not provided.",
+              "expected_condition": "HistoricalContext provided for duplicate verification",
+              "evaluation_result": "INSUFFICIENT_EVIDENCE",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": "HistoricalContext parameter was not provided."
+            },
+            "description": "Insufficient evidence for duplicate verification: HistoricalContext parameter was not provided.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0003",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-STR-001",
+            "rule_id": "CR-STR-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-STR-001",
+              "rule_reference": "CR-STR-001",
+              "observed_value": "All required fields present",
+              "expected_condition": "All structural required fields present",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Structural required fields present and verified.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0004",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-TMP-001",
+            "rule_id": "CR-TMP-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-TMP-001",
+              "rule_reference": "CR-TMP-001",
+              "observed_value": "All document dates valid",
+              "expected_condition": "Document date <= reference_datetime (2026-08-18T12:00:00+00:00)",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Document temporal dates verified valid.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0005",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-MET-001",
+            "rule_id": "CR-MET-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-MET-001",
+              "rule_reference": "CR-MET-001",
+              "observed_value": "DocumentMetadata valid",
+              "expected_condition": "Valid DocumentMetadata (non-zero size, valid checksum)",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Document metadata integrity verified.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0006",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-MET-001",
+            "rule_id": "CR-PRV-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-MET-001",
+              "rule_reference": "CR-PRV-001",
+              "observed_value": "SHA-256: e3b0c44298fc1c14...",
+              "expected_condition": "Valid SHA-256 hex string",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 5",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Cryptographic checksum provenance verified.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0007",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-EXT-001",
+            "rule_id": "CR-EXT-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-EXT-001",
+              "rule_reference": "CR-EXT-001",
+              "observed_value": "confidence=0.98",
+              "expected_condition": "confidence >= 0.70",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 7",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Extraction confidence meets quality threshold.",
+            "deterministic": true
+          }
+        ],
+        "finding_count": 7,
+        "policy_summaries": [
+          {
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "controls_evaluated": 6,
+            "controls_passed": 4,
+            "controls_failed": 1,
+            "controls_review": 0,
+            "controls_not_applicable": 0,
+            "controls_insufficient_evidence": 1
+          }
+        ],
+        "checks_run": [
+          "POL-FIN-001:C-FIN-001:CR-FIN-001",
+          "POL-FIN-001:C-FIN-002:CR-FIN-002",
+          "POL-FIN-001:C-STR-001:CR-STR-001",
+          "POL-FIN-001:C-TMP-001:CR-TMP-001",
+          "POL-FIN-001:C-MET-001:CR-MET-001",
+          "POL-FIN-001:C-MET-001:CR-PRV-001",
+          "POL-FIN-001:C-EXT-001:CR-EXT-001"
+        ],
+        "checks_skipped": [],
+        "policies_evaluated": [
+          "POL-FIN-001 v1.0.0"
+        ],
+        "evidence_summary": "Compliance evaluation completed for document 'doc-4068cf2507d5'. Evaluated 1 policy/policies across 7 check(s). Control Results: 4 PASSED, 1 FAILED, 1 INSUFFICIENT_EVIDENCE."
+      }
+    },
+    "status": "PENDING",
+    "created_at": "2026-08-30T20:19:33.012698+00:00",
+    "attempts": 0,
+    "_rid": "kolcAIgkW6SUAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SUAwAAAAAAAA==/",
+    "_etag": "\"24006fbd-0000-2000-0000-6a9490550000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121173
+  },
+  {
+    "id": "claim:0c757dc1d3c48c3c",
+    "type": "EXECUTION_CLAIM",
+    "claim_id": "claim:0c757dc1d3c48c3c",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-0c757dc1d3c48c3c",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:7:RISK_COMPLETED",
+    "payload_hash": "",
+    "owner_id": "worker-1",
+    "status": "COMPLETED",
+    "claimed_at": "2026-08-30T20:19:34.106343+00:00",
+    "lease_expires_at": "2026-08-30T20:24:34.106343+00:00",
+    "_etag": "\"240073bd-0000-2000-0000-6a9490560000\"",
+    "output_reference": {
+      "risk_result": {
+        "document_id": "doc-4068cf2507d5",
+        "composite_score": "53.18",
+        "risk_level": "HIGH",
+        "dimension_scores": [
+          {
+            "dimension_id": "DIM-FOR",
+            "dimension_name": "Forensic Anomaly Risk",
+            "score": "70.00",
+            "status": "AVAILABLE",
+            "weight": "0.30",
+            "reweighted_weight": "0.3",
+            "weighted_contribution": "21.000",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-FOR",
+              "dimension_name": "Forensic Anomaly Risk",
+              "raw_score": "70.00",
+              "weighted_contribution": "0.00",
+              "weight": "0.30",
+              "contributing_factors": [
+                "RF-FOR-LINE_ITEM_AMOUNT_MISMATCH-01"
+              ],
+              "source_phase": "Phase 8",
+              "scoring_rationale": "Evaluated 1 forensic risk factor(s). Sum raw value: 70.00, capped: 70.00."
+            }
+          },
+          {
+            "dimension_id": "DIM-CMP",
+            "dimension_name": "Compliance Violation Risk",
+            "score": "100.00",
+            "status": "AVAILABLE",
+            "weight": "0.30",
+            "reweighted_weight": "0.3",
+            "weighted_contribution": "30.000",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-CMP",
+              "dimension_name": "Compliance Violation Risk",
+              "raw_score": "100.00",
+              "weighted_contribution": "0.00",
+              "weight": "0.30",
+              "contributing_factors": [
+                "RF-CMP-C-FIN-001-01",
+                "RF-CMP-C-FIN-002-02"
+              ],
+              "source_phase": "Phase 9",
+              "scoring_rationale": "Evaluated 2 compliance risk factor(s). Sum raw value: 130.00, capped: 100.00."
+            }
+          },
+          {
+            "dimension_id": "DIM-EXT",
+            "dimension_name": "Extraction Quality Uncertainty",
+            "score": "2.0000",
+            "status": "AVAILABLE",
+            "weight": "0.15",
+            "reweighted_weight": "0.15",
+            "weighted_contribution": "0.300000",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-EXT",
+              "dimension_name": "Extraction Quality Uncertainty",
+              "raw_score": "2.0000",
+              "weighted_contribution": "0.00",
+              "weight": "0.15",
+              "contributing_factors": [
+                "confidence:0.98"
+              ],
+              "source_phase": "Phase 7",
+              "scoring_rationale": "Extraction confidence: 0.98. Uncertainty formula (1.00 - 0.98) * 100.00 = 2.0000."
+            }
+          },
+          {
+            "dimension_id": "DIM-PRV",
+            "dimension_name": "Provenance Integrity Risk",
+            "score": "0.00",
+            "status": "AVAILABLE",
+            "weight": "0.10",
+            "reweighted_weight": "0.1",
+            "weighted_contribution": "0.000",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-PRV",
+              "dimension_name": "Provenance Integrity Risk",
+              "raw_score": "0.00",
+              "weighted_contribution": "0.00",
+              "weight": "0.10",
+              "contributing_factors": [],
+              "source_phase": "Phase 5",
+              "scoring_rationale": "Evaluated metadata. Checksum present: True. Size: 1024 bytes."
+            }
+          },
+          {
+            "dimension_id": "DIM-DAT",
+            "dimension_name": "Data Completeness Uncertainty",
+            "score": "12.50",
+            "status": "AVAILABLE",
+            "weight": "0.15",
+            "reweighted_weight": "0.15",
+            "weighted_contribution": "1.8750",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-DAT",
+              "dimension_name": "Data Completeness Uncertainty",
+              "raw_score": "12.50",
+              "weighted_contribution": "0.00",
+              "weight": "0.15",
+              "contributing_factors": [
+                "skipped:2/16"
+              ],
+              "source_phase": "Phase 8 + 9",
+              "scoring_rationale": "Skipped checks ratio: 2/16 (12.50%)."
+            }
+          }
+        ],
+        "profile_id": "RP-FIN-001",
+        "profile_version": "1.0.0",
+        "uncertainty_flag": false,
+        "review_recommended": true,
+        "checks_skipped": [],
+        "calculation_trace": {
+          "profile_id": "RP-FIN-001",
+          "profile_version": "1.0.0",
+          "factors_evaluated": 3,
+          "factors_deduplicated": 3,
+          "reweighted_dimensions": {
+            "DIM-FOR": "0.3",
+            "DIM-CMP": "0.3",
+            "DIM-EXT": "0.15",
+            "DIM-PRV": "0.1",
+            "DIM-DAT": "0.15"
+          },
+          "dimension_raw_scores": {
+            "DIM-FOR": "70.00",
+            "DIM-CMP": "100.00",
+            "DIM-EXT": "2.0000",
+            "DIM-PRV": "0.00",
+            "DIM-DAT": "12.50"
+          },
+          "dimension_weighted_contributions": {
+            "DIM-FOR": "21.000",
+            "DIM-CMP": "30.000",
+            "DIM-EXT": "0.300000",
+            "DIM-PRV": "0.000",
+            "DIM-DAT": "1.8750"
+          },
+          "unrounded_composite_score": "53.175000",
+          "final_composite_score": "53.18",
+          "classification_level": "HIGH",
+          "steps": [
+            {
+              "step_number": 1,
+              "step_name": "Factor Parsing",
+              "input_values": {
+                "raw_factor_count": "3"
+              },
+              "formula": "parse_all_risk_factors(prior_phase_outputs)",
+              "output_value": "Parsed 3 raw risk factors"
+            },
+            {
+              "step_number": 2,
+              "step_name": "Lineage Aggregation",
+              "input_values": {
+                "raw_factors": "3",
+                "policy": "LINEAGE_SOURCE_PRIORITY"
+              },
+              "formula": "RiskAggregationPolicy.aggregate_factors(raw_factors)",
+              "output_value": "Deduplicated to 3 factors"
+            },
+            {
+              "step_number": 3,
+              "step_name": "Dimension Scoring",
+              "input_values": {
+                "DIM-FOR": "70.00",
+                "DIM-CMP": "100.00",
+                "DIM-EXT": "2.0000",
+                "DIM-PRV": "0.00",
+                "DIM-DAT": "12.50"
+              },
+              "formula": "score_dimension(factors, payload, profile)",
+              "output_value": "Computed raw dimension scores"
+            },
+            {
+              "step_number": 4,
+              "step_name": "Dynamic Reweighting",
+              "input_values": {
+                "active_dimensions": "['DIM-FOR', 'DIM-CMP', 'DIM-EXT', 'DIM-PRV', 'DIM-DAT']",
+                "sum_active_weights": "1.00"
+              },
+              "formula": "w_d' = w_d / sum(w_active)",
+              "output_value": "Reweighted active weights: {'DIM-FOR': Decimal('0.3'), 'DIM-CMP': Decimal('0.3'), 'DIM-EXT': Decimal('0.15'), 'DIM-PRV': Decimal('0.1'), 'DIM-DAT': Decimal('0.15')}"
+            },
+            {
+              "step_number": 5,
+              "step_name": "Composite Quantization",
+              "input_values": {
+                "unrounded": "53.175000",
+                "rounding_mode": "ROUND_HALF_UP"
+              },
+              "formula": "sum(score_d * reweight_d).quantize(0.01)",
+              "output_value": "53.18"
+            },
+            {
+              "step_number": 6,
+              "step_name": "Risk Classification",
+              "input_values": {
+                "composite": "53.18",
+                "threshold_critical": "75.00",
+                "threshold_high": "50.00",
+                "threshold_medium": "25.00"
+              },
+              "formula": "classify_risk_level(composite, thresholds)",
+              "output_value": "HIGH"
+            }
+          ]
+        },
+        "assessment_summary": "Risk assessment completed for document 'doc-4068cf2507d5' using profile 'RP-FIN-001 v1.0.0'. Composite Risk Score: 53.18 (HIGH). Evaluated 3 risk factor(s) (3 post-deduplication). Uncertainty Flag: False, Review Recommended: True.",
+        "deterministic": true
+      }
+    },
+    "_rid": "kolcAIgkW6SVAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SVAwAAAAAAAA==/",
+    "_attachments": "attachments/",
+    "_ts": 1788121174
+  },
+  {
+    "id": "idemp:0c757dc1d3c48c3c",
+    "type": "IDEMPOTENCY",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-0c757dc1d3c48c3c",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:7:RISK_COMPLETED",
+    "payload_hash": "",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "workflow_revision": 7,
+    "output_reference": {
+      "risk_result": {
+        "document_id": "doc-4068cf2507d5",
+        "composite_score": "53.18",
+        "risk_level": "HIGH",
+        "dimension_scores": [
+          {
+            "dimension_id": "DIM-FOR",
+            "dimension_name": "Forensic Anomaly Risk",
+            "score": "70.00",
+            "status": "AVAILABLE",
+            "weight": "0.30",
+            "reweighted_weight": "0.3",
+            "weighted_contribution": "21.000",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-FOR",
+              "dimension_name": "Forensic Anomaly Risk",
+              "raw_score": "70.00",
+              "weighted_contribution": "0.00",
+              "weight": "0.30",
+              "contributing_factors": [
+                "RF-FOR-LINE_ITEM_AMOUNT_MISMATCH-01"
+              ],
+              "source_phase": "Phase 8",
+              "scoring_rationale": "Evaluated 1 forensic risk factor(s). Sum raw value: 70.00, capped: 70.00."
+            }
+          },
+          {
+            "dimension_id": "DIM-CMP",
+            "dimension_name": "Compliance Violation Risk",
+            "score": "100.00",
+            "status": "AVAILABLE",
+            "weight": "0.30",
+            "reweighted_weight": "0.3",
+            "weighted_contribution": "30.000",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-CMP",
+              "dimension_name": "Compliance Violation Risk",
+              "raw_score": "100.00",
+              "weighted_contribution": "0.00",
+              "weight": "0.30",
+              "contributing_factors": [
+                "RF-CMP-C-FIN-001-01",
+                "RF-CMP-C-FIN-002-02"
+              ],
+              "source_phase": "Phase 9",
+              "scoring_rationale": "Evaluated 2 compliance risk factor(s). Sum raw value: 130.00, capped: 100.00."
+            }
+          },
+          {
+            "dimension_id": "DIM-EXT",
+            "dimension_name": "Extraction Quality Uncertainty",
+            "score": "2.0000",
+            "status": "AVAILABLE",
+            "weight": "0.15",
+            "reweighted_weight": "0.15",
+            "weighted_contribution": "0.300000",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-EXT",
+              "dimension_name": "Extraction Quality Uncertainty",
+              "raw_score": "2.0000",
+              "weighted_contribution": "0.00",
+              "weight": "0.15",
+              "contributing_factors": [
+                "confidence:0.98"
+              ],
+              "source_phase": "Phase 7",
+              "scoring_rationale": "Extraction confidence: 0.98. Uncertainty formula (1.00 - 0.98) * 100.00 = 2.0000."
+            }
+          },
+          {
+            "dimension_id": "DIM-PRV",
+            "dimension_name": "Provenance Integrity Risk",
+            "score": "0.00",
+            "status": "AVAILABLE",
+            "weight": "0.10",
+            "reweighted_weight": "0.1",
+            "weighted_contribution": "0.000",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-PRV",
+              "dimension_name": "Provenance Integrity Risk",
+              "raw_score": "0.00",
+              "weighted_contribution": "0.00",
+              "weight": "0.10",
+              "contributing_factors": [],
+              "source_phase": "Phase 5",
+              "scoring_rationale": "Evaluated metadata. Checksum present: True. Size: 1024 bytes."
+            }
+          },
+          {
+            "dimension_id": "DIM-DAT",
+            "dimension_name": "Data Completeness Uncertainty",
+            "score": "12.50",
+            "status": "AVAILABLE",
+            "weight": "0.15",
+            "reweighted_weight": "0.15",
+            "weighted_contribution": "1.8750",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-DAT",
+              "dimension_name": "Data Completeness Uncertainty",
+              "raw_score": "12.50",
+              "weighted_contribution": "0.00",
+              "weight": "0.15",
+              "contributing_factors": [
+                "skipped:2/16"
+              ],
+              "source_phase": "Phase 8 + 9",
+              "scoring_rationale": "Skipped checks ratio: 2/16 (12.50%)."
+            }
+          }
+        ],
+        "profile_id": "RP-FIN-001",
+        "profile_version": "1.0.0",
+        "uncertainty_flag": false,
+        "review_recommended": true,
+        "checks_skipped": [],
+        "calculation_trace": {
+          "profile_id": "RP-FIN-001",
+          "profile_version": "1.0.0",
+          "factors_evaluated": 3,
+          "factors_deduplicated": 3,
+          "reweighted_dimensions": {
+            "DIM-FOR": "0.3",
+            "DIM-CMP": "0.3",
+            "DIM-EXT": "0.15",
+            "DIM-PRV": "0.1",
+            "DIM-DAT": "0.15"
+          },
+          "dimension_raw_scores": {
+            "DIM-FOR": "70.00",
+            "DIM-CMP": "100.00",
+            "DIM-EXT": "2.0000",
+            "DIM-PRV": "0.00",
+            "DIM-DAT": "12.50"
+          },
+          "dimension_weighted_contributions": {
+            "DIM-FOR": "21.000",
+            "DIM-CMP": "30.000",
+            "DIM-EXT": "0.300000",
+            "DIM-PRV": "0.000",
+            "DIM-DAT": "1.8750"
+          },
+          "unrounded_composite_score": "53.175000",
+          "final_composite_score": "53.18",
+          "classification_level": "HIGH",
+          "steps": [
+            {
+              "step_number": 1,
+              "step_name": "Factor Parsing",
+              "input_values": {
+                "raw_factor_count": "3"
+              },
+              "formula": "parse_all_risk_factors(prior_phase_outputs)",
+              "output_value": "Parsed 3 raw risk factors"
+            },
+            {
+              "step_number": 2,
+              "step_name": "Lineage Aggregation",
+              "input_values": {
+                "raw_factors": "3",
+                "policy": "LINEAGE_SOURCE_PRIORITY"
+              },
+              "formula": "RiskAggregationPolicy.aggregate_factors(raw_factors)",
+              "output_value": "Deduplicated to 3 factors"
+            },
+            {
+              "step_number": 3,
+              "step_name": "Dimension Scoring",
+              "input_values": {
+                "DIM-FOR": "70.00",
+                "DIM-CMP": "100.00",
+                "DIM-EXT": "2.0000",
+                "DIM-PRV": "0.00",
+                "DIM-DAT": "12.50"
+              },
+              "formula": "score_dimension(factors, payload, profile)",
+              "output_value": "Computed raw dimension scores"
+            },
+            {
+              "step_number": 4,
+              "step_name": "Dynamic Reweighting",
+              "input_values": {
+                "active_dimensions": "['DIM-FOR', 'DIM-CMP', 'DIM-EXT', 'DIM-PRV', 'DIM-DAT']",
+                "sum_active_weights": "1.00"
+              },
+              "formula": "w_d' = w_d / sum(w_active)",
+              "output_value": "Reweighted active weights: {'DIM-FOR': Decimal('0.3'), 'DIM-CMP': Decimal('0.3'), 'DIM-EXT': Decimal('0.15'), 'DIM-PRV': Decimal('0.1'), 'DIM-DAT': Decimal('0.15')}"
+            },
+            {
+              "step_number": 5,
+              "step_name": "Composite Quantization",
+              "input_values": {
+                "unrounded": "53.175000",
+                "rounding_mode": "ROUND_HALF_UP"
+              },
+              "formula": "sum(score_d * reweight_d).quantize(0.01)",
+              "output_value": "53.18"
+            },
+            {
+              "step_number": 6,
+              "step_name": "Risk Classification",
+              "input_values": {
+                "composite": "53.18",
+                "threshold_critical": "75.00",
+                "threshold_high": "50.00",
+                "threshold_medium": "25.00"
+              },
+              "formula": "classify_risk_level(composite, thresholds)",
+              "output_value": "HIGH"
+            }
+          ]
+        },
+        "assessment_summary": "Risk assessment completed for document 'doc-4068cf2507d5' using profile 'RP-FIN-001 v1.0.0'. Composite Risk Score: 53.18 (HIGH). Evaluated 3 risk factor(s) (3 post-deduplication). Uncertainty Flag: False, Review Recommended: True.",
+        "deterministic": true
+      }
+    },
+    "processed_at": "2026-08-30T20:19:34.144075+00:00",
+    "_rid": "kolcAIgkW6SWAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SWAwAAAAAAAA==/",
+    "_etag": "\"240074bd-0000-2000-0000-6a9490560000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121174
+  },
+  {
+    "id": "outbox:evt-wf-test2-live-doc-4068cf2507d5-rev8",
+    "type": "OUTBOX",
+    "outbox_id": "evt-wf-test2-live-doc-4068cf2507d5-rev8",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "document_id": "doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-rev8",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:8:REVIEW_REQUESTED",
+    "event_type": "REVIEW_REQUESTED",
+    "workflow_revision": 8,
+    "payload_hash": "1b1e838e431535deaeaeb5599a90a016fa2137fd44420b70706c60b273095187",
+    "payload": {
+      "document_id": "doc-4068cf2507d5",
+      "previous_output": {
+        "risk_result": {
+          "document_id": "doc-4068cf2507d5",
+          "composite_score": "53.18",
+          "risk_level": "HIGH",
+          "dimension_scores": [
+            {
+              "dimension_id": "DIM-FOR",
+              "dimension_name": "Forensic Anomaly Risk",
+              "score": "70.00",
+              "status": "AVAILABLE",
+              "weight": "0.30",
+              "reweighted_weight": "0.3",
+              "weighted_contribution": "21.000",
+              "max_possible": "100.00",
+              "evidence": {
+                "dimension_id": "DIM-FOR",
+                "dimension_name": "Forensic Anomaly Risk",
+                "raw_score": "70.00",
+                "weighted_contribution": "0.00",
+                "weight": "0.30",
+                "contributing_factors": [
+                  "RF-FOR-LINE_ITEM_AMOUNT_MISMATCH-01"
+                ],
+                "source_phase": "Phase 8",
+                "scoring_rationale": "Evaluated 1 forensic risk factor(s). Sum raw value: 70.00, capped: 70.00."
+              }
+            },
+            {
+              "dimension_id": "DIM-CMP",
+              "dimension_name": "Compliance Violation Risk",
+              "score": "100.00",
+              "status": "AVAILABLE",
+              "weight": "0.30",
+              "reweighted_weight": "0.3",
+              "weighted_contribution": "30.000",
+              "max_possible": "100.00",
+              "evidence": {
+                "dimension_id": "DIM-CMP",
+                "dimension_name": "Compliance Violation Risk",
+                "raw_score": "100.00",
+                "weighted_contribution": "0.00",
+                "weight": "0.30",
+                "contributing_factors": [
+                  "RF-CMP-C-FIN-001-01",
+                  "RF-CMP-C-FIN-002-02"
+                ],
+                "source_phase": "Phase 9",
+                "scoring_rationale": "Evaluated 2 compliance risk factor(s). Sum raw value: 130.00, capped: 100.00."
+              }
+            },
+            {
+              "dimension_id": "DIM-EXT",
+              "dimension_name": "Extraction Quality Uncertainty",
+              "score": "2.0000",
+              "status": "AVAILABLE",
+              "weight": "0.15",
+              "reweighted_weight": "0.15",
+              "weighted_contribution": "0.300000",
+              "max_possible": "100.00",
+              "evidence": {
+                "dimension_id": "DIM-EXT",
+                "dimension_name": "Extraction Quality Uncertainty",
+                "raw_score": "2.0000",
+                "weighted_contribution": "0.00",
+                "weight": "0.15",
+                "contributing_factors": [
+                  "confidence:0.98"
+                ],
+                "source_phase": "Phase 7",
+                "scoring_rationale": "Extraction confidence: 0.98. Uncertainty formula (1.00 - 0.98) * 100.00 = 2.0000."
+              }
+            },
+            {
+              "dimension_id": "DIM-PRV",
+              "dimension_name": "Provenance Integrity Risk",
+              "score": "0.00",
+              "status": "AVAILABLE",
+              "weight": "0.10",
+              "reweighted_weight": "0.1",
+              "weighted_contribution": "0.000",
+              "max_possible": "100.00",
+              "evidence": {
+                "dimension_id": "DIM-PRV",
+                "dimension_name": "Provenance Integrity Risk",
+                "raw_score": "0.00",
+                "weighted_contribution": "0.00",
+                "weight": "0.10",
+                "contributing_factors": [],
+                "source_phase": "Phase 5",
+                "scoring_rationale": "Evaluated metadata. Checksum present: True. Size: 1024 bytes."
+              }
+            },
+            {
+              "dimension_id": "DIM-DAT",
+              "dimension_name": "Data Completeness Uncertainty",
+              "score": "12.50",
+              "status": "AVAILABLE",
+              "weight": "0.15",
+              "reweighted_weight": "0.15",
+              "weighted_contribution": "1.8750",
+              "max_possible": "100.00",
+              "evidence": {
+                "dimension_id": "DIM-DAT",
+                "dimension_name": "Data Completeness Uncertainty",
+                "raw_score": "12.50",
+                "weighted_contribution": "0.00",
+                "weight": "0.15",
+                "contributing_factors": [
+                  "skipped:2/16"
+                ],
+                "source_phase": "Phase 8 + 9",
+                "scoring_rationale": "Skipped checks ratio: 2/16 (12.50%)."
+              }
+            }
+          ],
+          "profile_id": "RP-FIN-001",
+          "profile_version": "1.0.0",
+          "uncertainty_flag": false,
+          "review_recommended": true,
+          "checks_skipped": [],
+          "calculation_trace": {
+            "profile_id": "RP-FIN-001",
+            "profile_version": "1.0.0",
+            "factors_evaluated": 3,
+            "factors_deduplicated": 3,
+            "reweighted_dimensions": {
+              "DIM-FOR": "0.3",
+              "DIM-CMP": "0.3",
+              "DIM-EXT": "0.15",
+              "DIM-PRV": "0.1",
+              "DIM-DAT": "0.15"
+            },
+            "dimension_raw_scores": {
+              "DIM-FOR": "70.00",
+              "DIM-CMP": "100.00",
+              "DIM-EXT": "2.0000",
+              "DIM-PRV": "0.00",
+              "DIM-DAT": "12.50"
+            },
+            "dimension_weighted_contributions": {
+              "DIM-FOR": "21.000",
+              "DIM-CMP": "30.000",
+              "DIM-EXT": "0.300000",
+              "DIM-PRV": "0.000",
+              "DIM-DAT": "1.8750"
+            },
+            "unrounded_composite_score": "53.175000",
+            "final_composite_score": "53.18",
+            "classification_level": "HIGH",
+            "steps": [
+              {
+                "step_number": 1,
+                "step_name": "Factor Parsing",
+                "input_values": {
+                  "raw_factor_count": "3"
+                },
+                "formula": "parse_all_risk_factors(prior_phase_outputs)",
+                "output_value": "Parsed 3 raw risk factors"
+              },
+              {
+                "step_number": 2,
+                "step_name": "Lineage Aggregation",
+                "input_values": {
+                  "raw_factors": "3",
+                  "policy": "LINEAGE_SOURCE_PRIORITY"
+                },
+                "formula": "RiskAggregationPolicy.aggregate_factors(raw_factors)",
+                "output_value": "Deduplicated to 3 factors"
+              },
+              {
+                "step_number": 3,
+                "step_name": "Dimension Scoring",
+                "input_values": {
+                  "DIM-FOR": "70.00",
+                  "DIM-CMP": "100.00",
+                  "DIM-EXT": "2.0000",
+                  "DIM-PRV": "0.00",
+                  "DIM-DAT": "12.50"
+                },
+                "formula": "score_dimension(factors, payload, profile)",
+                "output_value": "Computed raw dimension scores"
+              },
+              {
+                "step_number": 4,
+                "step_name": "Dynamic Reweighting",
+                "input_values": {
+                  "active_dimensions": "['DIM-FOR', 'DIM-CMP', 'DIM-EXT', 'DIM-PRV', 'DIM-DAT']",
+                  "sum_active_weights": "1.00"
+                },
+                "formula": "w_d' = w_d / sum(w_active)",
+                "output_value": "Reweighted active weights: {'DIM-FOR': Decimal('0.3'), 'DIM-CMP': Decimal('0.3'), 'DIM-EXT': Decimal('0.15'), 'DIM-PRV': Decimal('0.1'), 'DIM-DAT': Decimal('0.15')}"
+              },
+              {
+                "step_number": 5,
+                "step_name": "Composite Quantization",
+                "input_values": {
+                  "unrounded": "53.175000",
+                  "rounding_mode": "ROUND_HALF_UP"
+                },
+                "formula": "sum(score_d * reweight_d).quantize(0.01)",
+                "output_value": "53.18"
+              },
+              {
+                "step_number": 6,
+                "step_name": "Risk Classification",
+                "input_values": {
+                  "composite": "53.18",
+                  "threshold_critical": "75.00",
+                  "threshold_high": "50.00",
+                  "threshold_medium": "25.00"
+                },
+                "formula": "classify_risk_level(composite, thresholds)",
+                "output_value": "HIGH"
+              }
+            ]
+          },
+          "assessment_summary": "Risk assessment completed for document 'doc-4068cf2507d5' using profile 'RP-FIN-001 v1.0.0'. Composite Risk Score: 53.18 (HIGH). Evaluated 3 risk factor(s) (3 post-deduplication). Uncertainty Flag: False, Review Recommended: True.",
+          "deterministic": true
+        }
+      },
+      "extraction": {
+        "document_type": "invoice",
+        "title": "INVOICE",
+        "entities": [
+          "SuperStore",
+          "Charlotte Melton",
+          "Gujranwala, Punjab, Pakistan"
+        ],
+        "dates": [
+          "2012-06-05"
+        ],
+        "amounts": [
+          "6,234.32",
+          "12,195.89",
+          "938.15",
+          "6,097.95",
+          "136.38"
+        ],
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604",
+            "quantity": "13",
+            "unit_price": "938.15",
+            "amount": "12195.89"
+          }
+        ],
+        "vendor": "SuperStore",
+        "customer": "Charlotte Melton",
+        "invoice_number": "27583",
+        "description": "Order ID : ID-2012-CM1219097-41065",
+        "extraction_confidence": 0.98
+      },
+      "status_reason": "Extraction completed successfully with confidence 0.98 >= threshold 0.70.",
+      "forensic_result": {
+        "document_id": "doc-4068cf2507d5",
+        "findings": [
+          {
+            "finding_code": "LINE_ITEM_AMOUNT_MISMATCH",
+            "category": "FINANCIAL",
+            "severity": "HIGH",
+            "title": "Line Item Amount Mismatch",
+            "description": "Line item 1 calculated amount (12195.95) does not match observed amount (12195.89).",
+            "evidence": {
+              "observed_value": "12195.89",
+              "expected_value": "12195.95",
+              "calculation": "13 * 938.15 = 12195.95 (quantized: 12195.95)",
+              "field_reference": "line_items[0].amount",
+              "context_notes": "Line item description: 'Brother Personal Copier, Color Copiers, Technology, TEC-CO-3604'"
+            },
+            "rule_id": "LINE_ITEM_AMOUNT_MISMATCH",
+            "deterministic": true,
+            "requires_review": true
+          }
+        ],
+        "finding_count": 1,
+        "deterministic_checks_run": [
+          "LINE_ITEM_AMOUNT_MISMATCH: Line Item Amount Arithmetic Verification",
+          "FUTURE_DOCUMENT_DATE: Future Document Date Detection",
+          "INVALID_DATE_FORMAT: ISO Date Format Verification",
+          "DATE_ORDER_INVALID: Semantic Date Ordering Verification",
+          "MISSING_REQUIRED_FIELD: Missing Structural Field Verification",
+          "INVALID_DOCUMENT_METADATA: Metadata Consistency Verification",
+          "DUPLICATE_IDENTIFIER: Duplicate Identifier Verification"
+        ],
+        "checks_skipped": [
+          {
+            "rule_id": "DATE_ORDER_INVALID",
+            "reason": "Required semantic date ordering fields ('issue_date', 'due_date') are unavailable."
+          },
+          {
+            "rule_id": "DUPLICATE_IDENTIFIER",
+            "reason": "HistoricalContext parameter was not provided."
+          }
+        ],
+        "evidence_summary": "Forensic analysis completed. Identified 1 finding(s) (0 CRITICAL, 1 HIGH, 0 MEDIUM, 0 LOW). Executed 7 check(s), skipped 2 check(s)."
+      },
+      "compliance_result": {
+        "document_id": "doc-4068cf2507d5",
+        "findings": [
+          {
+            "finding_id": "cmp-fnd-0001",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-FIN-001",
+            "rule_id": "CR-FIN-001",
+            "status": "FAIL",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-FIN-001",
+              "rule_reference": "CR-FIN-001",
+              "observed_value": "Forensic finding detected: Line Item Amount Mismatch (HIGH)",
+              "expected_condition": "Zero LINE_ITEM_AMOUNT_MISMATCH forensic findings",
+              "evaluation_result": "FAIL",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [
+                "LINE_ITEM_AMOUNT_MISMATCH"
+              ],
+              "context_notes": "Line item 1 calculated amount (12195.95) does not match observed amount (12195.89)."
+            },
+            "description": "Compliance failed due to forensic arithmetic discrepancy: Line item 1 calculated amount (12195.95) does not match observed amount (12195.89).",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0002",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-FIN-002",
+            "rule_id": "CR-FIN-002",
+            "status": "INSUFFICIENT_EVIDENCE",
+            "evidence": {
+              "policy_reference": "POL-FIN-002 v1.0.0",
+              "control_reference": "C-FIN-002",
+              "rule_reference": "CR-FIN-002",
+              "observed_value": "Forensic duplicate check skipped: HistoricalContext parameter was not provided.",
+              "expected_condition": "HistoricalContext provided for duplicate verification",
+              "evaluation_result": "INSUFFICIENT_EVIDENCE",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": "HistoricalContext parameter was not provided."
+            },
+            "description": "Insufficient evidence for duplicate verification: HistoricalContext parameter was not provided.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0003",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-STR-001",
+            "rule_id": "CR-STR-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-STR-001",
+              "rule_reference": "CR-STR-001",
+              "observed_value": "All required fields present",
+              "expected_condition": "All structural required fields present",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Structural required fields present and verified.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0004",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-TMP-001",
+            "rule_id": "CR-TMP-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-TMP-001",
+              "rule_reference": "CR-TMP-001",
+              "observed_value": "All document dates valid",
+              "expected_condition": "Document date <= reference_datetime (2026-08-18T12:00:00+00:00)",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Document temporal dates verified valid.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0005",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-MET-001",
+            "rule_id": "CR-MET-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-MET-001",
+              "rule_reference": "CR-MET-001",
+              "observed_value": "DocumentMetadata valid",
+              "expected_condition": "Valid DocumentMetadata (non-zero size, valid checksum)",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 8",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Document metadata integrity verified.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0006",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-MET-001",
+            "rule_id": "CR-PRV-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-MET-001",
+              "rule_reference": "CR-PRV-001",
+              "observed_value": "SHA-256: e3b0c44298fc1c14...",
+              "expected_condition": "Valid SHA-256 hex string",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 5",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Cryptographic checksum provenance verified.",
+            "deterministic": true
+          },
+          {
+            "finding_id": "cmp-fnd-0007",
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "control_id": "C-EXT-001",
+            "rule_id": "CR-EXT-001",
+            "status": "PASS",
+            "evidence": {
+              "policy_reference": "POL-FIN-001 v1.0.0",
+              "control_reference": "C-EXT-001",
+              "rule_reference": "CR-EXT-001",
+              "observed_value": "confidence=0.98",
+              "expected_condition": "confidence >= 0.70",
+              "evaluation_result": "PASS",
+              "source_phase": "Phase 7",
+              "forensic_finding_codes": [],
+              "context_notes": null
+            },
+            "description": "Extraction confidence meets quality threshold.",
+            "deterministic": true
+          }
+        ],
+        "finding_count": 7,
+        "policy_summaries": [
+          {
+            "policy_id": "POL-FIN-001",
+            "policy_version": "1.0.0",
+            "controls_evaluated": 6,
+            "controls_passed": 4,
+            "controls_failed": 1,
+            "controls_review": 0,
+            "controls_not_applicable": 0,
+            "controls_insufficient_evidence": 1
+          }
+        ],
+        "checks_run": [
+          "POL-FIN-001:C-FIN-001:CR-FIN-001",
+          "POL-FIN-001:C-FIN-002:CR-FIN-002",
+          "POL-FIN-001:C-STR-001:CR-STR-001",
+          "POL-FIN-001:C-TMP-001:CR-TMP-001",
+          "POL-FIN-001:C-MET-001:CR-MET-001",
+          "POL-FIN-001:C-MET-001:CR-PRV-001",
+          "POL-FIN-001:C-EXT-001:CR-EXT-001"
+        ],
+        "checks_skipped": [],
+        "policies_evaluated": [
+          "POL-FIN-001 v1.0.0"
+        ],
+        "evidence_summary": "Compliance evaluation completed for document 'doc-4068cf2507d5'. Evaluated 1 policy/policies across 7 check(s). Control Results: 4 PASSED, 1 FAILED, 1 INSUFFICIENT_EVIDENCE."
+      },
+      "risk_result": {
+        "document_id": "doc-4068cf2507d5",
+        "composite_score": "53.18",
+        "risk_level": "HIGH",
+        "dimension_scores": [
+          {
+            "dimension_id": "DIM-FOR",
+            "dimension_name": "Forensic Anomaly Risk",
+            "score": "70.00",
+            "status": "AVAILABLE",
+            "weight": "0.30",
+            "reweighted_weight": "0.3",
+            "weighted_contribution": "21.000",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-FOR",
+              "dimension_name": "Forensic Anomaly Risk",
+              "raw_score": "70.00",
+              "weighted_contribution": "0.00",
+              "weight": "0.30",
+              "contributing_factors": [
+                "RF-FOR-LINE_ITEM_AMOUNT_MISMATCH-01"
+              ],
+              "source_phase": "Phase 8",
+              "scoring_rationale": "Evaluated 1 forensic risk factor(s). Sum raw value: 70.00, capped: 70.00."
+            }
+          },
+          {
+            "dimension_id": "DIM-CMP",
+            "dimension_name": "Compliance Violation Risk",
+            "score": "100.00",
+            "status": "AVAILABLE",
+            "weight": "0.30",
+            "reweighted_weight": "0.3",
+            "weighted_contribution": "30.000",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-CMP",
+              "dimension_name": "Compliance Violation Risk",
+              "raw_score": "100.00",
+              "weighted_contribution": "0.00",
+              "weight": "0.30",
+              "contributing_factors": [
+                "RF-CMP-C-FIN-001-01",
+                "RF-CMP-C-FIN-002-02"
+              ],
+              "source_phase": "Phase 9",
+              "scoring_rationale": "Evaluated 2 compliance risk factor(s). Sum raw value: 130.00, capped: 100.00."
+            }
+          },
+          {
+            "dimension_id": "DIM-EXT",
+            "dimension_name": "Extraction Quality Uncertainty",
+            "score": "2.0000",
+            "status": "AVAILABLE",
+            "weight": "0.15",
+            "reweighted_weight": "0.15",
+            "weighted_contribution": "0.300000",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-EXT",
+              "dimension_name": "Extraction Quality Uncertainty",
+              "raw_score": "2.0000",
+              "weighted_contribution": "0.00",
+              "weight": "0.15",
+              "contributing_factors": [
+                "confidence:0.98"
+              ],
+              "source_phase": "Phase 7",
+              "scoring_rationale": "Extraction confidence: 0.98. Uncertainty formula (1.00 - 0.98) * 100.00 = 2.0000."
+            }
+          },
+          {
+            "dimension_id": "DIM-PRV",
+            "dimension_name": "Provenance Integrity Risk",
+            "score": "0.00",
+            "status": "AVAILABLE",
+            "weight": "0.10",
+            "reweighted_weight": "0.1",
+            "weighted_contribution": "0.000",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-PRV",
+              "dimension_name": "Provenance Integrity Risk",
+              "raw_score": "0.00",
+              "weighted_contribution": "0.00",
+              "weight": "0.10",
+              "contributing_factors": [],
+              "source_phase": "Phase 5",
+              "scoring_rationale": "Evaluated metadata. Checksum present: True. Size: 1024 bytes."
+            }
+          },
+          {
+            "dimension_id": "DIM-DAT",
+            "dimension_name": "Data Completeness Uncertainty",
+            "score": "12.50",
+            "status": "AVAILABLE",
+            "weight": "0.15",
+            "reweighted_weight": "0.15",
+            "weighted_contribution": "1.8750",
+            "max_possible": "100.00",
+            "evidence": {
+              "dimension_id": "DIM-DAT",
+              "dimension_name": "Data Completeness Uncertainty",
+              "raw_score": "12.50",
+              "weighted_contribution": "0.00",
+              "weight": "0.15",
+              "contributing_factors": [
+                "skipped:2/16"
+              ],
+              "source_phase": "Phase 8 + 9",
+              "scoring_rationale": "Skipped checks ratio: 2/16 (12.50%)."
+            }
+          }
+        ],
+        "profile_id": "RP-FIN-001",
+        "profile_version": "1.0.0",
+        "uncertainty_flag": false,
+        "review_recommended": true,
+        "checks_skipped": [],
+        "calculation_trace": {
+          "profile_id": "RP-FIN-001",
+          "profile_version": "1.0.0",
+          "factors_evaluated": 3,
+          "factors_deduplicated": 3,
+          "reweighted_dimensions": {
+            "DIM-FOR": "0.3",
+            "DIM-CMP": "0.3",
+            "DIM-EXT": "0.15",
+            "DIM-PRV": "0.1",
+            "DIM-DAT": "0.15"
+          },
+          "dimension_raw_scores": {
+            "DIM-FOR": "70.00",
+            "DIM-CMP": "100.00",
+            "DIM-EXT": "2.0000",
+            "DIM-PRV": "0.00",
+            "DIM-DAT": "12.50"
+          },
+          "dimension_weighted_contributions": {
+            "DIM-FOR": "21.000",
+            "DIM-CMP": "30.000",
+            "DIM-EXT": "0.300000",
+            "DIM-PRV": "0.000",
+            "DIM-DAT": "1.8750"
+          },
+          "unrounded_composite_score": "53.175000",
+          "final_composite_score": "53.18",
+          "classification_level": "HIGH",
+          "steps": [
+            {
+              "step_number": 1,
+              "step_name": "Factor Parsing",
+              "input_values": {
+                "raw_factor_count": "3"
+              },
+              "formula": "parse_all_risk_factors(prior_phase_outputs)",
+              "output_value": "Parsed 3 raw risk factors"
+            },
+            {
+              "step_number": 2,
+              "step_name": "Lineage Aggregation",
+              "input_values": {
+                "raw_factors": "3",
+                "policy": "LINEAGE_SOURCE_PRIORITY"
+              },
+              "formula": "RiskAggregationPolicy.aggregate_factors(raw_factors)",
+              "output_value": "Deduplicated to 3 factors"
+            },
+            {
+              "step_number": 3,
+              "step_name": "Dimension Scoring",
+              "input_values": {
+                "DIM-FOR": "70.00",
+                "DIM-CMP": "100.00",
+                "DIM-EXT": "2.0000",
+                "DIM-PRV": "0.00",
+                "DIM-DAT": "12.50"
+              },
+              "formula": "score_dimension(factors, payload, profile)",
+              "output_value": "Computed raw dimension scores"
+            },
+            {
+              "step_number": 4,
+              "step_name": "Dynamic Reweighting",
+              "input_values": {
+                "active_dimensions": "['DIM-FOR', 'DIM-CMP', 'DIM-EXT', 'DIM-PRV', 'DIM-DAT']",
+                "sum_active_weights": "1.00"
+              },
+              "formula": "w_d' = w_d / sum(w_active)",
+              "output_value": "Reweighted active weights: {'DIM-FOR': Decimal('0.3'), 'DIM-CMP': Decimal('0.3'), 'DIM-EXT': Decimal('0.15'), 'DIM-PRV': Decimal('0.1'), 'DIM-DAT': Decimal('0.15')}"
+            },
+            {
+              "step_number": 5,
+              "step_name": "Composite Quantization",
+              "input_values": {
+                "unrounded": "53.175000",
+                "rounding_mode": "ROUND_HALF_UP"
+              },
+              "formula": "sum(score_d * reweight_d).quantize(0.01)",
+              "output_value": "53.18"
+            },
+            {
+              "step_number": 6,
+              "step_name": "Risk Classification",
+              "input_values": {
+                "composite": "53.18",
+                "threshold_critical": "75.00",
+                "threshold_high": "50.00",
+                "threshold_medium": "25.00"
+              },
+              "formula": "classify_risk_level(composite, thresholds)",
+              "output_value": "HIGH"
+            }
+          ]
+        },
+        "assessment_summary": "Risk assessment completed for document 'doc-4068cf2507d5' using profile 'RP-FIN-001 v1.0.0'. Composite Risk Score: 53.18 (HIGH). Evaluated 3 risk factor(s) (3 post-deduplication). Uncertainty Flag: False, Review Recommended: True.",
+        "deterministic": true
+      }
+    },
+    "status": "PENDING",
+    "created_at": "2026-08-30T20:19:34.144075+00:00",
+    "attempts": 0,
+    "_rid": "kolcAIgkW6SXAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SXAwAAAAAAAA==/",
+    "_etag": "\"240075bd-0000-2000-0000-6a9490560000\"",
+    "_attachments": "attachments/",
+    "_ts": 1788121174
+  },
+  {
+    "id": "claim:7aaf3e4575f53d88",
+    "type": "EXECUTION_CLAIM",
+    "claim_id": "claim:7aaf3e4575f53d88",
+    "workflow_id": "wf-test2-live-doc-4068cf2507d5",
+    "event_id": "evt-wf-test2-live-doc-4068cf2507d5-7aaf3e4575f53d88",
+    "logical_event_key": "wf-test2-live-doc-4068cf2507d5:8:REVIEW_REQUESTED",
+    "payload_hash": "",
+    "owner_id": "worker-1",
+    "status": "RUNNING",
+    "claimed_at": "2026-08-30T20:19:35.395467+00:00",
+    "lease_expires_at": "2026-08-30T20:24:35.395467+00:00",
+    "_etag": "\"240079bd-0000-2000-0000-6a9490570000\"",
+    "_rid": "kolcAIgkW6SYAwAAAAAAAA==",
+    "_self": "dbs/kolcAA==/colls/kolcAIgkW6Q=/docs/kolcAIgkW6SYAwAAAAAAAA==/",
+    "_attachments": "attachments/",
+    "_ts": 1788121175
+  }
+]

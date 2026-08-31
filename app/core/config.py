@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
 
     # Gemini AI Model & Document Intelligence Settings
-    gemini_model: str = "gemini-3.5-flash"
+    gemini_model: str = "gemini-3.6-flash"
     document_extraction_confidence_threshold: float = 0.70
     max_retries: int = 2
 
