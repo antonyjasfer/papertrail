@@ -49,6 +49,9 @@ class Settings(BaseSettings):
     # Optional Gemini Key (Fallback to Secret Manager or Mock in Dev)
     gemini_api_key: Optional[str] = None
 
+    # Frontend CORS Origin (secure, no wildcard)
+    frontend_origin: str = "http://localhost:5173"
+
     # Multi-Cloud Provider Selection ('gcp' | 'azure' | 'mock')
     papertrail_cloud_provider: str = "gcp"
 

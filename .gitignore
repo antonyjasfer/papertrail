@@ -42,3 +42,11 @@ reports/
 generated_pdfs/
 PaperTrail_Test_Documents/
 scratch/
+
+# Node.js & Frontend
+node_modules/
+dist/
+dist-ssr/
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/

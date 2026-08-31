@@ -1,5 +1,6 @@
 import logging
 from fastapi import FastAPI, Request, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api.middleware import ObservabilityMiddleware
@@ -25,6 +26,15 @@ app = FastAPI(
 
 # Attach Observability Middleware
 app.add_middleware(ObservabilityMiddleware)
+
+# Attach secure CORS Middleware (frontend origin only, no wildcard)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[settings.frontend_origin],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Register Routers
 app.include_router(health.router)
