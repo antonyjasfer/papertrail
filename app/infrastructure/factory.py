@@ -131,7 +131,10 @@ def get_secret_provider(provider: Optional[str] = None) -> ISecretProvider:
     if selected in ("azure", "key_vault"):
         from app.infrastructure.azure.key_vault_provider import AzureKeyVaultSecretProvider
         return AzureKeyVaultSecretProvider()
-    elif selected in ("gcp", "secret_manager", "mock", "env"):
-        from app.infrastructure.azure.key_vault_provider import AzureKeyVaultSecretProvider
-        return AzureKeyVaultSecretProvider()
+    elif selected in ("gcp", "secret_manager", "google"):
+        from app.infrastructure.gcp.secret_manager import GCPSecretManagerProvider
+        return GCPSecretManagerProvider()
+    elif selected in ("mock", "env"):
+        from app.infrastructure.gcp.secret_manager import GCPSecretManagerProvider
+        return GCPSecretManagerProvider()
     raise ValueError(f"Unsupported secret provider: '{selected}'")

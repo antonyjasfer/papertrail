@@ -4,127 +4,148 @@
 
 ---
 
-## Current Status: Phase 12 — Deterministic Audit Report Generation Layer (VERIFIED)
+## Multi-Cloud Architecture & Hackathon Technology Stack
 
-- **Phase 1 (Project Scaffold)**: Complete & Verified.
-- **Phase 2 (Dependencies & GCP Foundation)**: Complete & Verified.
-- **Phase 3 (Core State Machine)**: Complete & Verified.
-- **Phase 4 (Firestore Repository)**: Complete & Verified.
-- **Phase 5 (Document Storage Layer)**: Complete & Verified.
-- **Phase 6 (FastAPI Gateway)**: Complete & Verified.
-- **Phase 7 (Document Intelligence Agent)**: Complete & Verified.
-- **Phase 8 (Deterministic Forensic Engine)**: Complete & Verified.
-- **Phase 9 (Deterministic Compliance Engine)**: Complete & Verified.
-- **Phase 10 (Deterministic Risk Assessment Engine)**: Complete & Verified.
-- **Phase 11 (Cryptographic Audit & Provenance Layer)**: Complete & Verified.
-- **Phase 12 (Deterministic Audit Report Generation Layer)**: Complete & Verified.
+PaperTrail is engineered with a **provider-neutral multi-cloud architecture** using a dynamic dependency-injection factory layer (`app/infrastructure/factory.py`).
+
+```text
+                              ┌──────────────────────────────────┐
+                              │         User / Client            │
+                              └────────────────┬─────────────────┘
+                                               │
+                                               ▼
+                              ┌──────────────────────────────────┐
+                              │          FastAPI Gateway         │
+                              └────────────────┬─────────────────┘
+                                               │
+                                               ▼
+                              ┌──────────────────────────────────┐
+                              │    Dynamic Provider Factory      │
+                              └────────┬────────────────┬────────┘
+                                       │                │
+            PAPERTRAIL_CLOUD_PROVIDER  │                │  PAPERTRAIL_CLOUD_PROVIDER
+                   = "azure"           │                │        = "gcp"
+                                       ▼                ▼
+                     ┌───────────────────────┐   ┌───────────────────────────┐
+                     │   Azure Provider      │   │    Google Cloud Stack     │
+                     │  ───────────────────  │   │   ─────────────────────   │
+                     │ • Azure Container App │   │ • Cloud Run (Serverless)  │
+                     │ • Azure Cosmos DB     │   │ • Gemini 3.5 Flash        │
+                     │ • Azure Blob Storage  │   │ • Cloud Storage (GCS)     │
+                     │ • Azure Service Bus   │   │ • Cloud Pub/Sub           │
+                     │ • Azure Key Vault     │   │ • Cloud Firestore         │
+                     │                       │   │ • Secret Manager          │
+                     │ [Live Tested Backend] │   │ [Deployable / Supported]  │
+                     └───────────────────────┘   └───────────────────────────┘
+```
+
+### Google Technologies & Agent Stack
+
+1. **Gemini 3.5+**: Powered by `gemini-3.5-flash` for deterministic multimodal document extraction, classification, zero-hallucination validation, and prompt injection defense.
+2. **Google Agent Framework / GenAI SDK**: Implemented using the official `google-genai` SDK (`genai.Client`) with structured Pydantic schema validation.
+3. **Google Cloud Run**: Lean multi-stage container deployment (`Dockerfile`, `PORT=8080`, non-root user `appuser:10001`) with instant health and readiness verification.
+4. **Google Cloud Provider Layer**:
+   - **Cloud Firestore**: Atomic state persistence, monotonic revisions, execution claims, and outbox event storage (`FirestoreStateManager`, `WorkflowRepository`, `DocumentRepository`, `AuditEventRepository`).
+   - **Cloud Storage (GCS)**: Raw document payload and audit report storage (`GCSStorageProvider`).
+   - **Cloud Pub/Sub**: Asynchronous pipeline stage event dispatching (`PubSubPublisher`, `PubSubSubscriber`).
+   - **Secret Manager**: Secure API key retrieval via Google Application Default Credentials (`GCPSecretManagerProvider`).
+
+> [!NOTE]
+> **Deployment Status**: Azure Container Apps serves as the primary live validated production deployment across all 7 rigorous test scenarios (Clean, Line-Item Arithmetic Mismatch, Duplicate Invoices, Structural Anomalies, Ambiguity Handling, False-Positive Validation, and Malformed Handling). The codebase includes a native, complete Google Cloud deployment path documented in [docs/deployment/google-cloud.md](docs/deployment/google-cloud.md).
 
 ---
 
-## System Architecture
-
-PaperTrail AI is architected cleanly into modular, decoupled layers:
+## Core Pipeline Architecture
 
 ```text
 HTTP Client
       │
       ▼
-FastAPI Gateway (Phase 6)
+FastAPI Gateway
       │
       ▼
-Document Storage Service (Phase 5)
+Document Storage Service (IStorageProvider: GCS / Azure Blob)
    │                       │
    ▼                       ▼
-Cloud Storage          Document Repository (Phase 5)
+Object Storage        Document Repository (Firestore / Cosmos DB)
 (Raw Artifacts)            │
                            ▼
-                       Firestore (/documents/{document_id})
+              Document Intelligence Service
                            │
                            ▼
-             Document Intelligence Service (Phase 7)
+              Document Intelligence Agent
                            │
                            ▼
-             Document Intelligence Agent (Phase 7)
+                 Gemini 3.5 Flash (google-genai SDK)
                            │
                            ▼
-                   Gemini 3.5 Flash (Factual Extraction)
+              Deterministic Python Validation
                            │
                            ▼
-             Deterministic Python Validation (Phase 7)
+              Deterministic Forensic Engine
                            │
                            ▼
-             Deterministic Forensic Engine (Phase 8)
+              Evidence-Backed Forensic Findings
                            │
                            ▼
-             Evidence-Backed Forensic Findings (Phase 8)
+              Deterministic Compliance Engine
                            │
                            ▼
-             Deterministic Compliance Engine (Phase 9)
+              Evidence-Backed Compliance Findings
                            │
                            ▼
-             Evidence-Backed Compliance Findings (Phase 9)
+              Deterministic Risk Assessment Engine
                            │
                            ▼
-             Deterministic Risk Assessment Engine (Phase 10)
+              Auditable Multi-Dimensional Decimal Risk Assessment
                            │
                            ▼
-             Auditable Multi-Dimensional Decimal Risk Assessment (Phase 10)
+              Cryptographic Audit & Provenance Layer
                            │
                            ▼
-             Cryptographic Audit & Provenance Layer (Phase 11)
+              Immutable SHA-256 Prev-Hash Audit Chain & Evidence Bundle
                            │
                            ▼
-             Immutable SHA-256 Prev-Hash Audit Chain & Evidence Bundle (Phase 11)
+              Deterministic Audit Report Generation Layer
                            │
                            ▼
-             Deterministic Audit Report Generation Layer (Phase 12)
-                           │
-                           ▼
-             Canonical Report JSON (content_hash) & Human-Readable PDF (artifact_hash) (Phase 12)
+              Canonical Report JSON (content_hash) & ReportLab PDF (artifact_hash)
 ```
 
-### Key Architectural Principles
-1. **Deterministic State Machine**: Lifecycle transitions (`app/core/state.py`) are strictly governed by Python domain logic.
-2. **Decoupled Persistence**: `WorkflowRepository` persists state to Firestore `/workflows/{workflow_id}`.
-3. **Artifact & Metadata Storage**: `DocumentStorageService` stores raw file payloads in Google Cloud Storage (`documents/{document_id}/original/{sanitized_filename}`) and structured metadata in Firestore (`/documents/{document_id}`).
-4. **Cryptographic Checksum**: Every document is fingerprinted using SHA-256 for cryptographic provenance tracking.
-5. **RESTful FastAPI Gateway**: Clean, validated endpoints (`POST /documents`, `GET /documents/{id}`, `GET /documents/{id}/download`, `DELETE /documents/{id}`, `GET /health`) with global exception mapping and OpenAPI schema generation.
-6. **Document Intelligence Agent**: Powered by Gemini 3.5 Flash via `google-genai` SDK for multimodal understanding, classification, precise string monetary decimal extractions, prompt injection defense, and deterministic Python `AnalysisStatus` calculation.
-7. **Deterministic Forensic Engine**: 100% Python deterministic rule validation (`Decimal` financial arithmetic, ISO date checks, structural verification, duplicate detection) producing reproducible, evidence-backed `ForensicFinding` records with zero LLM/database coupling.
-8. **Deterministic Compliance Engine**: 100% Python deterministic policy evaluation against versioned organizational policies, controls, and rules producing evidence-backed `ComplianceFinding` records with explicit clock isolation (`ComplianceContext.reference_datetime`) and zero LLM/database/state-machine coupling.
-9. **Deterministic Risk Assessment Engine**: 100% Python multi-dimensional risk evaluation using exact `Decimal` arithmetic, dynamic weight reweighting for missing evidence, evidence lineage deduplication (`RiskAggregationPolicy`), strict clock isolation (`RiskContext.reference_datetime`), and reproducible calculation audit traces with zero LLM/database/state-machine coupling.
-10. **Cryptographic Audit & Provenance Layer**: Immutable, append-only SHA-256 hash chaining of canonical payload digests, microsecond UTC ISO-8601 formatting, sequence completeness verification, declared engine provenance metadata, and evidence bundle sealing with zero LLM/state-machine mutation coupling.
-11. **Deterministic Audit Report Generation Layer**: Presentation-only report synthesis generating canonical machine-readable JSON (`content_hash`) and in-memory ReportLab PDF (`artifact_hash`) with single-source clock isolation (`ReportContext.reference_datetime`), path-traversal-safe identifier validation (`validate_identifier`), and zero LLM/state-machine mutation coupling.
+---
+
+## Key Architectural Principles
+
+1. **Deterministic State Machine**: Lifecycle transitions (`app/core/state.py`) are strictly governed by Python domain logic with monotonic revision locking.
+2. **Provider-Neutral Dependency Injection**: Storage, databases, event brokers, and secrets resolve dynamically via `app/infrastructure/factory.py`.
+3. **Cryptographic Checksum & Immutability**: Every document is fingerprinted using SHA-256, and all audit events form an immutable cryptographic hash chain.
+4. **Zero-Hallucination AI Extraction**: Document Intelligence uses Gemini 3.5 Flash with strict factual fallback isolation—never fabricating vendor, invoice, or financial identifiers on API failure.
+5. **Deterministic Python Domain Engines**: Forensics, Compliance, and Risk engines run 100% deterministic Python arithmetic with exact `Decimal` precision, strict clock isolation, and zero LLM hallucination risk.
+6. **Container & Cloud Run Ready**: Complies with Google Cloud Run runtime contracts (fast startup, zero blocking network calls on module import, non-root security context).
 
 ---
 
 ## Technical Documentation
 
-- [GCP Foundation Architecture](file:///c:/Users/anton/OneDrive/Desktop/papertrail/papertrail/docs/gcp_foundation.md)
-- [Core State Machine Specification](file:///c:/Users/anton/OneDrive/Desktop/papertrail/papertrail/docs/state_machine.md)
-- [Firestore Workflow Repository Documentation](file:///c:/Users/anton/OneDrive/Desktop/papertrail/papertrail/docs/firestore_repository.md)
-- [Document Storage Layer Documentation](file:///c:/Users/anton/OneDrive/Desktop/papertrail/papertrail/docs/document_storage.md)
-- [FastAPI Gateway Documentation](file:///c:/Users/anton/OneDrive/Desktop/papertrail/papertrail/docs/fastapi_gateway.md)
-- [Document Intelligence Agent Documentation](file:///c:/Users/anton/OneDrive/Desktop/papertrail/papertrail/docs/document_intelligence_agent.md)
-- [Deterministic Forensic Engine Documentation](file:///c:/Users/anton/OneDrive/Desktop/papertrail/papertrail/docs/forensic_engine.md)
-- [Deterministic Compliance Engine Documentation](file:///c:/Users/anton/OneDrive/Desktop/papertrail/papertrail/docs/compliance_engine.md)
-- [Deterministic Risk Assessment Engine Documentation](file:///c:/Users/anton/OneDrive/Desktop/papertrail/papertrail/docs/risk_engine.md)
-- [Cryptographic Audit & Provenance Documentation](file:///c:/Users/anton/OneDrive/Desktop/papertrail/papertrail/docs/audit_provenance.md)
-- [Deterministic Audit Report Generation Documentation](file:///c:/Users/anton/OneDrive/Desktop/papertrail/papertrail/docs/report_generation.md)
+- [Google Cloud Deployment Guide](docs/deployment/google-cloud.md)
+- [GCP Foundation Architecture](docs/gcp_foundation.md)
+- [Core State Machine Specification](docs/state_machine.md)
+- [Firestore Workflow Repository Documentation](docs/firestore_repository.md)
+- [Document Storage Layer Documentation](docs/document_storage.md)
+- [FastAPI Gateway Documentation](docs/fastapi_gateway.md)
+- [Document Intelligence Agent Documentation](docs/document_intelligence_agent.md)
+- [Deterministic Forensic Engine Documentation](docs/forensic_engine.md)
+- [Deterministic Compliance Engine Documentation](docs/compliance_engine.md)
+- [Deterministic Risk Assessment Engine Documentation](docs/risk_engine.md)
+- [Cryptographic Audit & Provenance Documentation](docs/audit_provenance.md)
+- [Deterministic Audit Report Generation Documentation](docs/report_generation.md)
 
 ---
 
 ## Running Verification Tests
 
-Run the offline unit test suite (no GCP credentials required):
+Run the complete verification test suite (293 tests covering GCP provider hardening, Azure integration, forensics, compliance, risk, and report generation):
 
 ```bash
-.\venv\Scripts\pytest -q
-```
-
-To run live Google Cloud integration tests (requires GCP credentials & environment setup):
-
-```bash
-set GCP_INTEGRATION=1
-.\venv\Scripts\pytest -q
+.\venv\Scripts\pytest -v
 ```
